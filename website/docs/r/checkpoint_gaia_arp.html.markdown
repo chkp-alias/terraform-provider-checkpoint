@@ -69,10 +69,10 @@ ARP table default size: 4096, Range: 1024-131072, Supported starting from R82.00
 
 ## Import
 
-Use `settings` to import the existing configuration on the connected Gaia machine.
+Use an empty JSON object (`{}`) to import the existing configuration on the connected Gaia machine.
 
 ```shell
-terraform import checkpoint_gaia_arp.example 'settings'
+terraform import checkpoint_gaia_arp.example '{}'
 ```
 
 To specify optional read context or filters (`member_id`), use a JSON object with Terraform attribute names and include all required lookup fields.

@@ -29,10 +29,10 @@ The following arguments are supported:
 
 ## Import
 
-Use `settings` to import the existing configuration on the connected Gaia machine.
+Use an empty JSON object (`{}`) to import the existing configuration on the connected Gaia machine.
 
 ```shell
-terraform import checkpoint_gaia_hostname_on_login_page.example 'settings'
+terraform import checkpoint_gaia_hostname_on_login_page.example '{}'
 ```
 
 To specify optional read context or filters (`member_id`), use a JSON object with Terraform attribute names and include all required lookup fields.

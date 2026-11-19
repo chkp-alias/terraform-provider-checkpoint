@@ -33,7 +33,7 @@ func gaiaResourceImporter(objectName string, fields map[string]schema.ValueType,
 					values[required[0]] = json.RawMessage(id)
 				}
 			} else if len(required) != 0 || id != "settings" {
-				return nil, fmt.Errorf("use a JSON object with the resource lookup fields, or settings for a resource with no required lookup fields")
+				return nil, fmt.Errorf("use a JSON object with the resource lookup fields; use {} for a resource with no required lookup fields")
 			}
 
 			for _, name := range required {
