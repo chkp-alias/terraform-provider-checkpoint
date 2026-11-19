@@ -15,7 +15,7 @@ func resourceGaiaRadius() *schema.Resource {
         Read:   readGaiaRadius,
         Update: updateGaiaRadius,
         Delete: deleteGaiaRadius,
-        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+        Importer: gaiaResourceImporter("radius", map[string]schema.ValueType{
             "member_id": schema.TypeString,
         }),
         Schema: map[string]*schema.Schema{

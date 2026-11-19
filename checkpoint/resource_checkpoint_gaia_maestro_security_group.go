@@ -15,7 +15,7 @@ func resourceGaiaMaestroSecurityGroup() *schema.Resource {
         Read:   readGaiaMaestroSecurityGroup,
         Update: updateGaiaMaestroSecurityGroup,
         Delete: deleteGaiaMaestroSecurityGroup,
-        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+        Importer: gaiaResourceImporter("maestro-security-group", map[string]schema.ValueType{
             "resource_id": schema.TypeInt,
         }, "resource_id"),
         Schema: map[string]*schema.Schema{

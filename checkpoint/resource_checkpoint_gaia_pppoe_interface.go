@@ -15,7 +15,7 @@ func resourceGaiaPppoeInterface() *schema.Resource {
         Read:   readGaiaPppoeInterface,
         Update: updateGaiaPppoeInterface,
         Delete: deleteGaiaPppoeInterface,
-        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+        Importer: gaiaResourceImporter("pppoe-interface", map[string]schema.ValueType{
             "name": schema.TypeString,
             "member_id": schema.TypeString,
         }, "name"),

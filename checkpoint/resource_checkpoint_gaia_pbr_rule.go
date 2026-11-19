@@ -15,7 +15,7 @@ func resourceGaiaPbrRule() *schema.Resource {
         Read:   readGaiaPbrRule,
         Update: updateGaiaPbrRule,
         Delete: deleteGaiaPbrRule,
-        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+        Importer: gaiaResourceImporter("pbr-rule", map[string]schema.ValueType{
             "priority": schema.TypeInt,
             "virtual_system_id": schema.TypeInt,
             "member_id": schema.TypeString,

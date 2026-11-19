@@ -15,7 +15,7 @@ func resourceGaiaIpv6() *schema.Resource {
         Read:   readGaiaIpv6,
         Update: updateGaiaIpv6,
         Delete: deleteGaiaIpv6,
-        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+        Importer: gaiaResourceImporter("ipv6", map[string]schema.ValueType{
             "member_id": schema.TypeString,
         }),
         Schema: map[string]*schema.Schema{

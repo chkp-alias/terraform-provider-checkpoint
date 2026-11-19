@@ -15,7 +15,7 @@ func resourceGaiaRouterId() *schema.Resource {
         Read:   readGaiaRouterId,
         Update: updateGaiaRouterId,
         Delete: deleteGaiaRouterId,
-        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+        Importer: gaiaResourceImporter("router-id", map[string]schema.ValueType{
             "member_id": schema.TypeString,
         }),
         Schema: map[string]*schema.Schema{

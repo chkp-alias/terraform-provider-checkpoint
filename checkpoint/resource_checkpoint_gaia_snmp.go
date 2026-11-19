@@ -15,7 +15,7 @@ func resourceGaiaSnmp() *schema.Resource {
         Read:   readGaiaSnmp,
         Update: updateGaiaSnmp,
         Delete: deleteGaiaSnmp,
-        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+        Importer: gaiaResourceImporter("snmp", map[string]schema.ValueType{
             "member_id": schema.TypeString,
         }),
         Schema: map[string]*schema.Schema{

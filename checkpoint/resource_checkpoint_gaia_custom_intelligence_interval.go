@@ -15,7 +15,7 @@ func resourceGaiaCustomIntelligenceInterval() *schema.Resource {
         Read:   readGaiaCustomIntelligenceInterval,
         Update: updateGaiaCustomIntelligenceInterval,
         Delete: deleteGaiaCustomIntelligenceInterval,
-        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+        Importer: gaiaResourceImporter("custom-intelligence-interval", map[string]schema.ValueType{
             "member_id": schema.TypeString,
         }),
         Schema: map[string]*schema.Schema{

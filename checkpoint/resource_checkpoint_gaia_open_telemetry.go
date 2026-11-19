@@ -15,7 +15,7 @@ func resourceGaiaOpenTelemetry() *schema.Resource {
         Read:   readGaiaOpenTelemetry,
         Update: updateGaiaOpenTelemetry,
         Delete: deleteGaiaOpenTelemetry,
-        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+        Importer: gaiaResourceImporter("open-telemetry", map[string]schema.ValueType{
             "member_id": schema.TypeString,
         }),
         Schema: map[string]*schema.Schema{

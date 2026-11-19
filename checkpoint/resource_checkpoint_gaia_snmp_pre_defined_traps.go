@@ -15,7 +15,7 @@ func resourceGaiaSnmpPreDefinedTraps() *schema.Resource {
         Read:   readGaiaSnmpPreDefinedTraps,
         Update: updateGaiaSnmpPreDefinedTraps,
         Delete: deleteGaiaSnmpPreDefinedTraps,
-        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+        Importer: gaiaResourceImporter("snmp-pre-defined-traps", map[string]schema.ValueType{
             "member_id": schema.TypeString,
         }),
         Schema: map[string]*schema.Schema{

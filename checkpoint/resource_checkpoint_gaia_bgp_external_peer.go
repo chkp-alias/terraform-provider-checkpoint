@@ -15,7 +15,7 @@ func resourceGaiaBgpExternalPeer() *schema.Resource {
         Read:   readGaiaBgpExternalPeer,
         Update: updateGaiaBgpExternalPeer,
         Delete: deleteGaiaBgpExternalPeer,
-        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+        Importer: gaiaResourceImporter("bgp-external-peer", map[string]schema.ValueType{
             "peer": schema.TypeString,
             "remote_as": schema.TypeString,
         }, "peer", "remote_as"),

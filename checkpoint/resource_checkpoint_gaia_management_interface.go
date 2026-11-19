@@ -15,7 +15,7 @@ func resourceGaiaManagementInterface() *schema.Resource {
         Read:   readGaiaManagementInterface,
         Update: updateGaiaManagementInterface,
         Delete: deleteGaiaManagementInterface,
-        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+        Importer: gaiaResourceImporter("management-interface", map[string]schema.ValueType{
             "virtual_system_id": schema.TypeInt,
             "member_id": schema.TypeString,
         }),

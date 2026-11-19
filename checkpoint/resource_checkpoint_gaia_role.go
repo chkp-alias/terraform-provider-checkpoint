@@ -15,7 +15,7 @@ func resourceGaiaRole() *schema.Resource {
         Read:   readGaiaRole,
         Update: updateGaiaRole,
         Delete: deleteGaiaRole,
-        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+        Importer: gaiaResourceImporter("role", map[string]schema.ValueType{
             "name": schema.TypeString,
             "member_id": schema.TypeString,
         }, "name"),

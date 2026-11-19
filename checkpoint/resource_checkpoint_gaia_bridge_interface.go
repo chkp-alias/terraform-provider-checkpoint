@@ -15,7 +15,7 @@ func resourceGaiaBridgeInterface() *schema.Resource {
         Read:   readGaiaBridgeInterface,
         Update: updateGaiaBridgeInterface,
         Delete: deleteGaiaBridgeInterface,
-        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+        Importer: gaiaResourceImporter("bridge-interface", map[string]schema.ValueType{
             "virtual_system_id": schema.TypeInt,
             "name": schema.TypeString,
             "member_id": schema.TypeString,

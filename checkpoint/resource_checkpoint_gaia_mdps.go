@@ -15,7 +15,7 @@ func resourceGaiaMdps() *schema.Resource {
         Read:   readGaiaMdps,
         Update: updateGaiaMdps,
         Delete: deleteGaiaMdps,
-        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+        Importer: gaiaResourceImporter("mdps", map[string]schema.ValueType{
             "member_id": schema.TypeString,
         }),
         Schema: map[string]*schema.Schema{

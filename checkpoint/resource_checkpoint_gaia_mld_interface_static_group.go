@@ -15,7 +15,7 @@ func resourceGaiaMldInterfaceStaticGroup() *schema.Resource {
         Read:   readGaiaMldInterfaceStaticGroup,
         Update: updateGaiaMldInterfaceStaticGroup,
         Delete: deleteGaiaMldInterfaceStaticGroup,
-        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+        Importer: gaiaResourceImporter("mld-interface-static-group", map[string]schema.ValueType{
             "interface": schema.TypeString,
             "static_group": schema.TypeString,
             "member_id": schema.TypeString,

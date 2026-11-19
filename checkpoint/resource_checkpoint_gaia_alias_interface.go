@@ -14,7 +14,7 @@ func resourceGaiaAliasInterface() *schema.Resource {
         Create: createGaiaAliasInterface,
         Read:   readGaiaAliasInterface,
         Delete: deleteGaiaAliasInterface,
-        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+        Importer: gaiaResourceImporter("alias-interface", map[string]schema.ValueType{
             "virtual_system_id": schema.TypeInt,
             "name": schema.TypeString,
             "member_id": schema.TypeString,

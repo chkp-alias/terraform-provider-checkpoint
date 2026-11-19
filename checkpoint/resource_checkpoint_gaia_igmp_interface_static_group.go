@@ -15,7 +15,7 @@ func resourceGaiaIgmpInterfaceStaticGroup() *schema.Resource {
         Read:   readGaiaIgmpInterfaceStaticGroup,
         Update: updateGaiaIgmpInterfaceStaticGroup,
         Delete: deleteGaiaIgmpInterfaceStaticGroup,
-        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+        Importer: gaiaResourceImporter("igmp-interface-static-group", map[string]schema.ValueType{
             "interface": schema.TypeString,
             "static_group": schema.TypeString,
             "member_id": schema.TypeString,

@@ -15,7 +15,7 @@ func resourceGaiaMessageOfTheDay() *schema.Resource {
         Read:   readGaiaMessageOfTheDay,
         Update: updateGaiaMessageOfTheDay,
         Delete: deleteGaiaMessageOfTheDay,
-        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+        Importer: gaiaResourceImporter("message-of-the-day", map[string]schema.ValueType{
             "member_id": schema.TypeString,
         }),
         Schema: map[string]*schema.Schema{

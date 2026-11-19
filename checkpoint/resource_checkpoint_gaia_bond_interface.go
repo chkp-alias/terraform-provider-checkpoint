@@ -15,7 +15,7 @@ func resourceGaiaBondInterface() *schema.Resource {
         Read:   readGaiaBondInterface,
         Update: updateGaiaBondInterface,
         Delete: deleteGaiaBondInterface,
-        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+        Importer: gaiaResourceImporter("bond-interface", map[string]schema.ValueType{
             "virtual_system_id": schema.TypeInt,
             "name": schema.TypeString,
             "member_id": schema.TypeString,

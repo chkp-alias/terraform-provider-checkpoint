@@ -15,7 +15,7 @@ func resourceGaiaAuthenticationOrder() *schema.Resource {
         Read:   readGaiaAuthenticationOrder,
         Update: updateGaiaAuthenticationOrder,
         Delete: deleteGaiaAuthenticationOrder,
-        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+        Importer: gaiaResourceImporter("authentication-order", map[string]schema.ValueType{
             "member_id": schema.TypeString,
         }),
         Schema: map[string]*schema.Schema{

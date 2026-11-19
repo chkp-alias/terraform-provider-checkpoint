@@ -15,7 +15,7 @@ func resourceGaiaIsisInterface() *schema.Resource {
         Read:   readGaiaIsisInterface,
         Update: updateGaiaIsisInterface,
         Delete: deleteGaiaIsisInterface,
-        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+        Importer: gaiaResourceImporter("isis-interface", map[string]schema.ValueType{
             "protocol_instance": schema.TypeString,
             "name": schema.TypeString,
             "member_id": schema.TypeString,

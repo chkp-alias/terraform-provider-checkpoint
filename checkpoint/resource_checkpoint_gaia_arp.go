@@ -15,7 +15,7 @@ func resourceGaiaArp() *schema.Resource {
         Read:   readGaiaArp,
         Update: updateGaiaArp,
         Delete: deleteGaiaArp,
-        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+        Importer: gaiaResourceImporter("arp", map[string]schema.ValueType{
             "member_id": schema.TypeString,
         }),
         Schema: map[string]*schema.Schema{

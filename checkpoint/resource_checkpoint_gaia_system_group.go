@@ -15,7 +15,7 @@ func resourceGaiaSystemGroup() *schema.Resource {
         Read:   readGaiaSystemGroup,
         Update: updateGaiaSystemGroup,
         Delete: deleteGaiaSystemGroup,
-        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+        Importer: gaiaResourceImporter("system-group", map[string]schema.ValueType{
             "name": schema.TypeString,
             "member_id": schema.TypeString,
         }, "name"),

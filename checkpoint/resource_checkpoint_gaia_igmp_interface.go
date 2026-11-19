@@ -15,7 +15,7 @@ func resourceGaiaIgmpInterface() *schema.Resource {
         Read:   readGaiaIgmpInterface,
         Update: updateGaiaIgmpInterface,
         Delete: deleteGaiaIgmpInterface,
-        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+        Importer: gaiaResourceImporter("igmp-interface", map[string]schema.ValueType{
             "name": schema.TypeString,
             "member_id": schema.TypeString,
         }, "name"),

@@ -15,7 +15,7 @@ func resourceGaiaLldp() *schema.Resource {
         Read:   readGaiaLldp,
         Update: updateGaiaLldp,
         Delete: deleteGaiaLldp,
-        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+        Importer: gaiaResourceImporter("lldp", map[string]schema.ValueType{
             "member_id": schema.TypeString,
         }),
         Schema: map[string]*schema.Schema{

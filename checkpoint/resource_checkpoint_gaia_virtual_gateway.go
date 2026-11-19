@@ -16,7 +16,7 @@ func resourceGaiaVirtualGateway() *schema.Resource {
         Read:   readGaiaVirtualGateway,
         Update: updateGaiaVirtualGateway,
         Delete: deleteGaiaVirtualGateway,
-        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+        Importer: gaiaResourceImporter("virtual-gateway", map[string]schema.ValueType{
             "resource_id": schema.TypeInt,
             "member_id": schema.TypeString,
         }, "resource_id"),

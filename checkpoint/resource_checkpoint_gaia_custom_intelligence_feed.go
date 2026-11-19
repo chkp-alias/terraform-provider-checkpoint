@@ -16,7 +16,7 @@ func resourceGaiaCustomIntelligenceFeed() *schema.Resource {
         Read:   readGaiaCustomIntelligenceFeed,
         Update: updateGaiaCustomIntelligenceFeed,
         Delete: deleteGaiaCustomIntelligenceFeed,
-        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+        Importer: gaiaResourceImporter("custom-intelligence-feed", map[string]schema.ValueType{
             "name": schema.TypeString,
             "member_id": schema.TypeString,
         }, "name"),

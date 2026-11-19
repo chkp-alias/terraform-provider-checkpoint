@@ -15,7 +15,7 @@ func resourceGaiaPhysicalInterface() *schema.Resource {
         Read:   readGaiaPhysicalInterface,
         Update: updateGaiaPhysicalInterface,
         Delete: deleteGaiaPhysicalInterface,
-        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+        Importer: gaiaResourceImporter("physical-interface", map[string]schema.ValueType{
             "name": schema.TypeString,
             "virtual_system_id": schema.TypeInt,
             "member_id": schema.TypeString,

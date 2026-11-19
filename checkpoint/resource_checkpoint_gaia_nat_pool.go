@@ -15,7 +15,7 @@ func resourceGaiaNatPool() *schema.Resource {
         Read:   readGaiaNatPool,
         Update: updateGaiaNatPool,
         Delete: deleteGaiaNatPool,
-        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+        Importer: gaiaResourceImporter("nat-pool", map[string]schema.ValueType{
             "prefix": schema.TypeString,
             "member_id": schema.TypeString,
         }, "prefix"),

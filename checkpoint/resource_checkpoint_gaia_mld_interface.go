@@ -15,7 +15,7 @@ func resourceGaiaMldInterface() *schema.Resource {
         Read:   readGaiaMldInterface,
         Update: updateGaiaMldInterface,
         Delete: deleteGaiaMldInterface,
-        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+        Importer: gaiaResourceImporter("mld-interface", map[string]schema.ValueType{
             "name": schema.TypeString,
             "member_id": schema.TypeString,
         }, "name"),

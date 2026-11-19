@@ -15,7 +15,7 @@ func resourceGaiaHostname() *schema.Resource {
         Read:   readGaiaHostname,
         Update: updateGaiaHostname,
         Delete: deleteGaiaHostname,
-        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+        Importer: gaiaResourceImporter("hostname", map[string]schema.ValueType{
             "member_id": schema.TypeString,
         }),
         Schema: map[string]*schema.Schema{

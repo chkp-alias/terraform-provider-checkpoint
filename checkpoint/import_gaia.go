@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -13,7 +14,7 @@ import (
 // created by the provider are synthetic, so a passthrough importer is insufficient.
 // A single required lookup field can be supplied directly; composite identifiers
 // and optional context fields use a JSON object with Terraform attribute names.
-func gaiaResourceImporter(fields map[string]schema.ValueType, required ...string) *schema.ResourceImporter {
+func gaiaResourceImporter(objectName string, fields map[string]schema.ValueType, required ...string) *schema.ResourceImporter {
 	return &schema.ResourceImporter{
 		State: func(d *schema.ResourceData, _ interface{}) ([]*schema.ResourceData, error) {
 			id := strings.TrimSpace(d.Id())
@@ -82,6 +83,7 @@ func gaiaResourceImporter(fields map[string]schema.ValueType, required ...string
 					return nil, fmt.Errorf("cannot set Gaia import lookup field %q: %w", name, err)
 				}
 			}
+			d.SetId(objectName + "-" + acctest.RandString(10))
 			return []*schema.ResourceData{d}, nil
 		},
 	}

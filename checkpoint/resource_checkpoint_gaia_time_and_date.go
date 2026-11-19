@@ -16,7 +16,7 @@ func resourceGaiaTimeAndDate() *schema.Resource {
         Read:   readGaiaTimeAndDate,
         Update: updateGaiaTimeAndDate,
         Delete: deleteGaiaTimeAndDate,
-        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+        Importer: gaiaResourceImporter("time-and-date", map[string]schema.ValueType{
             "member_id": schema.TypeString,
         }),
         Schema: map[string]*schema.Schema{

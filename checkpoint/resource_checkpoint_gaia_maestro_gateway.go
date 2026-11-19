@@ -15,7 +15,7 @@ func resourceGaiaMaestroGateway() *schema.Resource {
         Read:   readGaiaMaestroGateway,
         Update: updateGaiaMaestroGateway,
         Delete: deleteGaiaMaestroGateway,
-        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+        Importer: gaiaResourceImporter("maestro-gateway", map[string]schema.ValueType{
             "resource_id": schema.TypeString,
         }, "resource_id"),
         Schema: map[string]*schema.Schema{

@@ -15,7 +15,7 @@ func resourceGaiaSshServerSettings() *schema.Resource {
         Read:   readGaiaSshServerSettings,
         Update: updateGaiaSshServerSettings,
         Delete: deleteGaiaSshServerSettings,
-        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+        Importer: gaiaResourceImporter("ssh-server-settings", map[string]schema.ValueType{
             "include_disabled_values": schema.TypeBool,
             "member_id": schema.TypeString,
         }),

@@ -15,7 +15,7 @@ func resourceGaiaStaticMroute() *schema.Resource {
         Read:   readGaiaStaticMroute,
         Update: updateGaiaStaticMroute,
         Delete: deleteGaiaStaticMroute,
-        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+        Importer: gaiaResourceImporter("static-mroute", map[string]schema.ValueType{
             "address": schema.TypeString,
             "mask_length": schema.TypeInt,
             "virtual_system_id": schema.TypeInt,

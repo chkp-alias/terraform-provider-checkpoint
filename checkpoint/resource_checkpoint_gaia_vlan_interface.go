@@ -15,7 +15,7 @@ func resourceGaiaVlanInterface() *schema.Resource {
         Read:   readGaiaVlanInterface,
         Update: updateGaiaVlanInterface,
         Delete: deleteGaiaVlanInterface,
-        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+        Importer: gaiaResourceImporter("vlan-interface", map[string]schema.ValueType{
             "virtual_system_id": schema.TypeInt,
             "name": schema.TypeString,
             "member_id": schema.TypeString,

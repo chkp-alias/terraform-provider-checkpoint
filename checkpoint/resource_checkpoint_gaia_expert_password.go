@@ -15,7 +15,7 @@ func resourceGaiaExpertPassword() *schema.Resource {
         Read:   readGaiaExpertPassword,
         Update: updateGaiaExpertPassword,
         Delete: deleteGaiaExpertPassword,
-        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+        Importer: gaiaResourceImporter("expert-password", map[string]schema.ValueType{
             "member_id": schema.TypeString,
         }),
         Schema: map[string]*schema.Schema{

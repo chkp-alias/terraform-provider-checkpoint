@@ -15,7 +15,7 @@ func resourceGaiaIpv6PimInterface() *schema.Resource {
         Read:   readGaiaIpv6PimInterface,
         Update: updateGaiaIpv6PimInterface,
         Delete: deleteGaiaIpv6PimInterface,
-        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+        Importer: gaiaResourceImporter("ipv6-pim-interface", map[string]schema.ValueType{
             "name": schema.TypeString,
             "member_id": schema.TypeString,
         }, "name"),

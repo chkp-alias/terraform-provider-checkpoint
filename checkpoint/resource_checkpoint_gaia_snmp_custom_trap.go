@@ -15,7 +15,7 @@ func resourceGaiaSnmpCustomTrap() *schema.Resource {
         Read:   readGaiaSnmpCustomTrap,
         Update: updateGaiaSnmpCustomTrap,
         Delete: deleteGaiaSnmpCustomTrap,
-        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+        Importer: gaiaResourceImporter("snmp-custom-trap", map[string]schema.ValueType{
             "name": schema.TypeString,
             "member_id": schema.TypeString,
         }, "name"),

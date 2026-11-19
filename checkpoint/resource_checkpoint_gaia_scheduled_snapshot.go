@@ -15,7 +15,7 @@ func resourceGaiaScheduledSnapshot() *schema.Resource {
         Read:   readGaiaScheduledSnapshot,
         Update: updateGaiaScheduledSnapshot,
         Delete: deleteGaiaScheduledSnapshot,
-        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+        Importer: gaiaResourceImporter("scheduled-snapshot", map[string]schema.ValueType{
             "member_id": schema.TypeString,
         }),
         Schema: map[string]*schema.Schema{

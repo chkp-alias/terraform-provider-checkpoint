@@ -15,7 +15,7 @@ func resourceGaiaGreInterface() *schema.Resource {
         Read:   readGaiaGreInterface,
         Update: updateGaiaGreInterface,
         Delete: deleteGaiaGreInterface,
-        Importer: gaiaResourceImporter(map[string]schema.ValueType{
+        Importer: gaiaResourceImporter("gre-interface", map[string]schema.ValueType{
             "virtual_system_id": schema.TypeInt,
             "name": schema.TypeString,
             "member_id": schema.TypeString,
