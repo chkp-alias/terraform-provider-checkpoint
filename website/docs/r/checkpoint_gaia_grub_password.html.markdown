@@ -41,3 +41,6 @@ To specify optional read context or filters (`member_id`), use a JSON object wit
 `member_id` selects the member used for reads; it does not restrict later writes to that member. Gaia set operations retain the scope documented by the resource.
 
 Create a matching resource block before importing, and review `terraform plan` afterward. The importer first validates and records the lookup fields; Terraform then calls the resource reader to fetch existing configuration. Import does not create the resource or recover write-only values such as passwords.
+
+
+The returned `password_hash` is computed and sensitive when omitted from configuration. An explicitly configured hash remains managed. Plaintext passwords cannot be recovered by import.

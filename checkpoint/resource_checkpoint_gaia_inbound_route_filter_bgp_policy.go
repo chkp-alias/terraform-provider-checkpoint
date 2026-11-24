@@ -10,7 +10,7 @@ import (
 
 )
 func resourceGaiaInboundRouteFilterBgpPolicy() *schema.Resource {   
-    return &schema.Resource{
+    return gaiaReadResource("inbound-route-filter-bgp-policy", &schema.Resource{
         Create: createGaiaInboundRouteFilterBgpPolicy,
         Read:   readGaiaInboundRouteFilterBgpPolicy,
         Update: updateGaiaInboundRouteFilterBgpPolicy,
@@ -183,7 +183,7 @@ func resourceGaiaInboundRouteFilterBgpPolicy() *schema.Resource {
                 Description: `Relevant for commands on Scalable and ElasticXL platforms only.<br>When member-id is provided in the login request,<br>show commands during the session will be executed on the specified member,<br>unless a different member-id is provided in a successive requests<br>Set operations will be performed on all members`,
             },
         },
-    }
+    })
 }
 
 func createGaiaInboundRouteFilterBgpPolicy(d *schema.ResourceData, m interface{}) error {
@@ -439,84 +439,7 @@ func readGaiaInboundRouteFilterBgpPolicy(d *schema.ResourceData, m interface{}) 
 
     log.Println("Read InboundRouteFilterBgpPolicy - Show JSON = ", safeCopyMap(inboundRouteFilterBgpPolicy))
 
-    if v, exists := inboundRouteFilterBgpPolicy["bgp"]; exists {
-        if items, ok := v.([]interface{}); ok && len(items) > 0 {
-            item, _ := items[0].(map[string]interface{})
-            if val, ok := item["policy-id"]; ok { if f, ok := val.(float64); ok { d.Set("policy_id", int(f)) } }
-            if val, ok := item["restrict-all-ipv4"]; ok { if b, ok := val.(bool); ok { d.Set("restrict_all_ipv4", b) } }
-            if val, ok := item["restrict-all-ipv6"]; ok { if b, ok := val.(bool); ok { d.Set("restrict_all_ipv6", b) } }
-            if val, ok := item["default-localpref"]; ok { d.Set("default_localpref", fmt.Sprintf("%v", val)) }
-            if val, ok := item["default-weight"]; ok { d.Set("default_weight", fmt.Sprintf("%v", val)) }
-            if val, ok := item["based-on-as"]; ok { d.Set("based_on_as", fmt.Sprintf("%v", val)) }
-            if val, ok := item["based-on-aspath"]; ok {
-                if bm, ok := val.(map[string]interface{}); ok {
-                    baEntry := map[string]interface{}{}
-                    if sv, ok := bm["aspath-regex"]; ok { baEntry["aspath_regex"] = fmt.Sprintf("%v", sv) }
-                    if sv, ok := bm["origin"]; ok { baEntry["origin"] = fmt.Sprintf("%v", sv) }
-                    if len(baEntry) > 0 { d.Set("based_on_aspath", []interface{}{baEntry}) }
-                }
-            }
-            if val, ok := item["community-match"]; ok {
-                if cmList, ok := val.([]interface{}); ok {
-                    cms := make([]interface{}, 0, len(cmList))
-                    for _, c := range cmList {
-                        if cm, ok := c.(map[string]interface{}); ok {
-                            entry := map[string]interface{}{}
-                            if sv, ok := cm["id"]; ok { if f, ok := sv.(float64); ok { entry["resource_id"] = int(f) } else { var n int; if _, err := fmt.Sscanf(fmt.Sprintf("%v", sv), "%d", &n); err == nil { entry["resource_id"] = n } } }
-                            if sv, ok := cm["as"]; ok { if f, ok := sv.(float64); ok { entry["as"] = int(f) } else { var n int; if _, err := fmt.Sscanf(fmt.Sprintf("%v", sv), "%d", &n); err == nil { entry["as"] = n } } }
-                            cms = append(cms, entry)
-                        }
-                    }
-                    d.Set("community_match", cms)
-                }
-            }
-            if val, ok := item["extcommunity-match"]; ok {
-                if ecList, ok := val.([]interface{}); ok {
-                    ecs := make([]interface{}, 0, len(ecList))
-                    for _, c := range ecList {
-                        if ec, ok := c.(map[string]interface{}); ok {
-                            entry := map[string]interface{}{}
-                            if sv, ok := ec["type"]; ok { entry["type"] = fmt.Sprintf("%v", sv) }
-                            if sv, ok := ec["sub-type"]; ok { entry["sub_type"] = fmt.Sprintf("%v", sv) }
-                            if sv, ok := ec["value"]; ok { entry["value"] = fmt.Sprintf("%v", sv) }
-                            ecs = append(ecs, entry)
-                        }
-                    }
-                    d.Set("extcommunity_match", ecs)
-                }
-            }
-            if val, ok := item["route"]; ok {
-                if routeList, ok := val.([]interface{}); ok {
-                    routes := make([]interface{}, 0, len(routeList))
-                    for _, r := range routeList {
-                        if rm, ok := r.(map[string]interface{}); ok {
-                            entry := map[string]interface{}{}
-                            if sv, ok := rm["subnet"]; ok { entry["subnet"] = fmt.Sprintf("%v", sv) }
-                            if sv, ok := rm["restrict"]; ok { if b, ok := sv.(bool); ok { entry["restrict"] = b } }
-                            if sv, ok := rm["match-type"]; ok { entry["match_type"] = fmt.Sprintf("%v", sv) }
-                            if sv, ok := rm["localpref"]; ok { entry["localpref"] = fmt.Sprintf("%v", sv) }
-                            if sv, ok := rm["weight"]; ok { entry["weight"] = fmt.Sprintf("%v", sv) }
-                            if sv, ok := rm["range"]; ok {
-                                if rangeMap, ok := sv.(map[string]interface{}); ok {
-                                    re := map[string]interface{}{}
-                                    if fv, ok := rangeMap["from"]; ok { var n int; if _, err := fmt.Sscanf(fmt.Sprintf("%v", fv), "%d", &n); err == nil { re["from"] = n } }
-                                    if tv, ok := rangeMap["to"]; ok { var n int; if _, err := fmt.Sscanf(fmt.Sprintf("%v", tv), "%d", &n); err == nil { re["to"] = n } }
-                                    if len(re) > 0 { entry["range"] = []interface{}{re} }
-                                }
-                            }
-                            routes = append(routes, entry)
-                        }
-                    }
-                    d.Set("route", routes)
-                }
-            }
-        }
-    }
-    if v, exists := inboundRouteFilterBgpPolicy["member-id"]; exists {
-        d.Set("member_id", fmt.Sprintf("%v", v))
-    }
-    d.SetId(d.Id())
-    return nil
+        return gaiaReadState(d, resourceGaiaInboundRouteFilterBgpPolicy().Schema, inboundRouteFilterBgpPolicy)
 }
 
 func updateGaiaInboundRouteFilterBgpPolicy(d *schema.ResourceData, m interface{}) error {

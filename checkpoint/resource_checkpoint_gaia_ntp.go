@@ -10,7 +10,7 @@ import (
 
 )
 func resourceGaiaNtp() *schema.Resource {   
-    return &schema.Resource{
+    return gaiaReadResource("ntp", &schema.Resource{
         Create: createGaiaNtp,
         Read:   readGaiaNtp,
         Update: updateGaiaNtp,
@@ -65,7 +65,7 @@ func resourceGaiaNtp() *schema.Resource {
                 Description: `Relevant for commands on Scalable and ElasticXL platforms only.<br>When member-id is provided in the login request,<br>show commands during the session will be executed on the specified member,<br>unless a different member-id is provided in a successive requests<br>Set operations will be performed on all members`,
             },
         },
-    }
+    })
 }
 
 func createGaiaNtp(d *schema.ResourceData, m interface{}) error {
@@ -184,24 +184,7 @@ func readGaiaNtp(d *schema.ResourceData, m interface{}) error {
 
     log.Println("Read Ntp - Show JSON = ", safeCopyMap(ntp))
 
-    if v, exists := ntp["enabled"]; exists {
-        if b, ok := v.(bool); ok {
-            d.Set("enabled", b)
-        } else if s, ok := v.(string); ok {
-            d.Set("enabled", s == "true")
-        }
-    }
-    if v, exists := ntp["servers"]; exists {
-        d.Set("servers", v.([]interface{}))
-    }
-    if v, exists := ntp["current"]; exists {
-        d.Set("current", fmt.Sprintf("%v", v))
-    }
-    if v, exists := ntp["preferred"]; exists {
-        d.Set("preferred", fmt.Sprintf("%v", v))
-    }
-    d.SetId(d.Id())
-    return nil
+        return gaiaReadState(d, resourceGaiaNtp().Schema, ntp)
 }
 
 func updateGaiaNtp(d *schema.ResourceData, m interface{}) error {

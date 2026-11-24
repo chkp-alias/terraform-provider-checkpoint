@@ -10,7 +10,7 @@ import (
 
 )
 func resourceGaiaMdps() *schema.Resource {   
-    return &schema.Resource{
+    return gaiaReadResource("mdps", &schema.Resource{
         Create: createGaiaMdps,
         Read:   readGaiaMdps,
         Update: updateGaiaMdps,
@@ -85,7 +85,7 @@ func resourceGaiaMdps() *schema.Resource {
                 Description: `Relevant for commands on Scalable and ElasticXL platforms only.<br>When member-id is provided in the login request,<br>show commands during the session will be executed on the specified member,<br>unless a different member-id is provided in a successive requests<br>Set operations will be performed on all members`,
             },
         },
-    }
+    })
 }
 
 func createGaiaMdps(d *schema.ResourceData, m interface{}) error {
@@ -221,38 +221,7 @@ func readGaiaMdps(d *schema.ResourceData, m interface{}) error {
 
     log.Println("Read Mdps - Show JSON = ", safeCopyMap(mdps))
 
-    if v, exists := mdps["separation-interfaces"]; exists {
-        if m, ok := v.(map[string]interface{}); ok {
-            d.Set("separation_interfaces", []interface{}{map[string]interface{}{
-                "management": fmt.Sprintf("%v", m["management"]),
-                "sync":       fmt.Sprintf("%v", m["sync"]),
-            }})
-        }
-    }
-    if v, exists := mdps["routing-separation"]; exists {
-        if m, ok := v.(map[string]interface{}); ok {
-            d.Set("routing_separation", []interface{}{map[string]interface{}{
-                "enabled": m["enabled"],
-            }})
-        }
-    }
-    if v, exists := mdps["resource-separation"]; exists {
-        if m, ok := v.(map[string]interface{}); ok {
-            cpus := 0
-            if f, ok := m["allocated-cpus"].(float64); ok {
-                cpus = int(f)
-            }
-            d.Set("resource_separation", []interface{}{map[string]interface{}{
-                "enabled":        m["enabled"],
-                "allocated_cpus": cpus,
-            }})
-        }
-    }
-    if v, exists := mdps["member-id"]; exists {
-        d.Set("member_id", fmt.Sprintf("%v", v))
-    }
-    d.SetId(d.Id())
-    return nil
+        return gaiaReadState(d, resourceGaiaMdps().Schema, mdps)
 }
 
 func updateGaiaMdps(d *schema.ResourceData, m interface{}) error {

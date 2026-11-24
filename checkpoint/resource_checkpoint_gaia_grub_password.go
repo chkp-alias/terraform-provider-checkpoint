@@ -10,7 +10,7 @@ import (
 
 )
 func resourceGaiaGrubPassword() *schema.Resource {   
-    return &schema.Resource{
+    return gaiaReadResource("grub-password", &schema.Resource{
         Create: createGaiaGrubPassword,
         Read:   readGaiaGrubPassword,
         Update: updateGaiaGrubPassword,
@@ -42,7 +42,7 @@ func resourceGaiaGrubPassword() *schema.Resource {
                 Description: `Relevant for commands on Scalable and ElasticXL platforms only.<br>When member-id is provided in the login request,<br>show commands during the session will be executed on the specified member,<br>unless a different member-id is provided in a successive requests<br>Set operations will be performed on all members`,
             },
         },
-    }
+    })
 }
 
 func createGaiaGrubPassword(d *schema.ResourceData, m interface{}) error {
@@ -157,14 +157,7 @@ func readGaiaGrubPassword(d *schema.ResourceData, m interface{}) error {
 
     log.Println("Read GrubPassword - Show JSON = ", safeCopyMap(grubPassword))
 
-    if v, exists := grubPassword["password-hash"]; exists {
-        d.Set("password_hash", fmt.Sprintf("%v", v))
-    }
-    if v, exists := grubPassword["member-id"]; exists {
-        d.Set("member_id", fmt.Sprintf("%v", v))
-    }
-    d.SetId(d.Id())
-    return nil
+        return gaiaReadState(d, resourceGaiaGrubPassword().Schema, grubPassword)
 }
 
 func updateGaiaGrubPassword(d *schema.ResourceData, m interface{}) error {
@@ -178,7 +171,7 @@ func updateGaiaGrubPassword(d *schema.ResourceData, m interface{}) error {
         payload["password"] = v.(string)
     }
 
-    if v, ok := d.GetOk("password_hash"); ok {
+    if v, ok := gaiaChangedValue(d, "password_hash"); ok {
         payload["password-hash"] = v.(string)
     }
 

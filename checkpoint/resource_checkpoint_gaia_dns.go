@@ -10,7 +10,7 @@ import (
 
 )
 func resourceGaiaDns() *schema.Resource {   
-    return &schema.Resource{
+    return gaiaReadResource("dns", &schema.Resource{
         Create: createGaiaDns,
         Read:   readGaiaDns,
         Update: updateGaiaDns,
@@ -95,7 +95,7 @@ func resourceGaiaDns() *schema.Resource {
                 Description: `Relevant for commands on Scalable and ElasticXL platforms only.<br>When member-id is provided in the login request,<br>show commands during the session will be executed on the specified member,<br>unless a different member-id is provided in a successive requests<br>Set operations will be performed on all members`,
             },
         },
-    }
+    })
 }
 
 func createGaiaDns(d *schema.ResourceData, m interface{}) error {
@@ -243,51 +243,7 @@ func readGaiaDns(d *schema.ResourceData, m interface{}) error {
 
     log.Println("Read Dns - Show JSON = ", safeCopyMap(dns))
 
-    if v, exists := dns["primary"]; exists {
-        d.Set("primary", fmt.Sprintf("%v", v))
-    }
-    if v, exists := dns["secondary"]; exists {
-        d.Set("secondary", fmt.Sprintf("%v", v))
-    }
-    if v, exists := dns["tertiary"]; exists {
-        d.Set("tertiary", fmt.Sprintf("%v", v))
-    }
-    if v, exists := dns["suffix"]; exists {
-        d.Set("suffix", fmt.Sprintf("%v", v))
-    }
-    if v, exists := dns["forwarding-domains"]; exists {
-        if items, ok := v.([]interface{}); ok {
-            out := make([]interface{}, 0, len(items))
-            for _, item := range items {
-                if m, ok := item.(map[string]interface{}); ok {
-                    out = append(out, map[string]interface{}{
-                        "primary":   fmt.Sprintf("%v", m["primary"]),
-                        "secondary": fmt.Sprintf("%v", m["secondary"]),
-                        "tertiary":  fmt.Sprintf("%v", m["tertiary"]),
-                        "suffix":    fmt.Sprintf("%v", m["suffix"]),
-                    })
-                }
-            }
-            d.Set("forwarding_domains", out)
-        }
-    }
-    if v, exists := dns["listening-interfaces"]; exists {
-        switch val := v.(type) {
-        case []interface{}:
-            d.Set("listening_interfaces", val)
-        case string:
-            d.Set("listening_interfaces", []interface{}{val})
-        default:
-            d.Set("listening_interfaces", []interface{}{})
-        }
-    }
-    if v, exists := dns["virtual-system-id"]; exists {
-        if f, ok := v.(float64); ok {
-            d.Set("virtual_system_id", int(f))
-        }
-    }
-    d.SetId(d.Id())
-    return nil
+        return gaiaReadState(d, resourceGaiaDns().Schema, dns)
 }
 
 func updateGaiaDns(d *schema.ResourceData, m interface{}) error {

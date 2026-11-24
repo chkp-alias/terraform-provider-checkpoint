@@ -11,7 +11,7 @@ import (
 
 )
 func resourceGaiaLightshotPartition() *schema.Resource {   
-    return &schema.Resource{
+    return gaiaReadResource("lightshot-partition", &schema.Resource{
         Create: createGaiaLightshotPartition,
         Read:   readGaiaLightshotPartition,
         Update: updateGaiaLightshotPartition,
@@ -48,7 +48,7 @@ func resourceGaiaLightshotPartition() *schema.Resource {
                 Computed: true,
             },
         },
-    }
+    })
 }
 
 func createGaiaLightshotPartition(d *schema.ResourceData, m interface{}) error {
@@ -171,26 +171,7 @@ func readGaiaLightshotPartition(d *schema.ResourceData, m interface{}) error {
 
     log.Println("Read LightshotPartition - Show JSON = ", safeCopyMap(lightshotPartition))
 
-    if v, exists := lightshotPartition["size"]; exists {
-        if f, ok := v.(float64); ok {
-            d.Set("size", int(f))
-        }
-    }
-    if v, exists := lightshotPartition["used"]; exists {
-        if f, ok := v.(float64); ok {
-            d.Set("used", int(f))
-        }
-    }
-    if v, exists := lightshotPartition["available"]; exists {
-        if f, ok := v.(float64); ok {
-            d.Set("available", int(f))
-        }
-    }
-    if v, exists := lightshotPartition["mount-on"]; exists {
-        d.Set("mount_on", fmt.Sprintf("%v", v))
-    }
-    d.SetId(d.Id())
-    return nil
+        return gaiaReadState(d, resourceGaiaLightshotPartition().Schema, lightshotPartition)
 }
 
 func updateGaiaLightshotPartition(d *schema.ResourceData, m interface{}) error {

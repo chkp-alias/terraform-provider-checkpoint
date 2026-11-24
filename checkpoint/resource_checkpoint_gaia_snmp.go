@@ -10,7 +10,7 @@ import (
 
 )
 func resourceGaiaSnmp() *schema.Resource {   
-    return &schema.Resource{
+    return gaiaReadResource("snmp", &schema.Resource{
         Create: createGaiaSnmp,
         Read:   readGaiaSnmp,
         Update: updateGaiaSnmp,
@@ -133,7 +133,7 @@ func resourceGaiaSnmp() *schema.Resource {
                 Description: `Relevant for commands on Scalable and ElasticXL platforms only.<br>When member-id is provided in the login request,<br>show commands during the session will be executed on the specified member,<br>unless a different member-id is provided in a successive requests<br>Set operations will be performed on all members`,
             },
         },
-    }
+    })
 }
 
 func createGaiaSnmp(d *schema.ResourceData, m interface{}) error {
@@ -314,45 +314,7 @@ func readGaiaSnmp(d *schema.ResourceData, m interface{}) error {
 
     log.Println("Read Snmp - Show JSON = ", safeCopyMap(snmp))
 
-    if v, exists := snmp["enabled"]; exists {
-        if b, ok := v.(bool); ok {
-            d.Set("enabled", b)
-        } else if s, ok := v.(string); ok {
-            d.Set("enabled", s == "true")
-        }
-    }
-    if v, exists := snmp["version"]; exists {
-        d.Set("version", fmt.Sprintf("%v", v))
-    }
-    if v, exists := snmp["trap-usm"]; exists {
-        d.Set("trap_usm", fmt.Sprintf("%v", v))
-    }
-    if v, exists := snmp["contact"]; exists {
-        d.Set("contact", fmt.Sprintf("%v", v))
-    }
-    if v, exists := snmp["location"]; exists {
-        d.Set("location", fmt.Sprintf("%v", v))
-    }
-    if v, exists := snmp["read-only-community"]; exists {
-        d.Set("read_only_community", fmt.Sprintf("%v", v))
-    }
-    if v, exists := snmp["read-write-community"]; exists {
-        d.Set("read_write_community", fmt.Sprintf("%v", v))
-    }
-    if v, exists := snmp["interfaces"]; exists {
-        d.Set("interfaces", fmt.Sprintf("%v", v))
-    }
-    if v, exists := snmp["pre-defined-traps-settings"]; exists {
-        d.Set("pre_defined_traps_settings", v)
-    }
-    if v, exists := snmp["custom-traps-settings"]; exists {
-        d.Set("custom_traps_settings", v)
-    }
-    if v, exists := snmp["vsx-settings"]; exists {
-        d.Set("vsx_settings", v)
-    }
-    d.SetId(d.Id())
-    return nil
+        return gaiaReadState(d, resourceGaiaSnmp().Schema, snmp)
 }
 
 func updateGaiaSnmp(d *schema.ResourceData, m interface{}) error {

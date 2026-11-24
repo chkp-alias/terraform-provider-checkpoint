@@ -10,7 +10,7 @@ import (
 
 )
 func resourceGaiaSnmpPreDefinedTraps() *schema.Resource {   
-    return &schema.Resource{
+    return gaiaReadResource("snmp-pre-defined-traps", &schema.Resource{
         Create: createGaiaSnmpPreDefinedTraps,
         Read:   readGaiaSnmpPreDefinedTraps,
         Update: updateGaiaSnmpPreDefinedTraps,
@@ -310,7 +310,7 @@ func resourceGaiaSnmpPreDefinedTraps() *schema.Resource {
                 Description: `Relevant for commands on Scalable and ElasticXL platforms only.<br>When member-id is provided in the login request,<br>show commands during the session will be executed on the specified member,<br>unless a different member-id is provided in a successive requests<br>Set operations will be performed on all members`,
             },
         },
-    }
+    })
 }
 
 func createGaiaSnmpPreDefinedTraps(d *schema.ResourceData, m interface{}) error {
@@ -621,65 +621,7 @@ func readGaiaSnmpPreDefinedTraps(d *schema.ResourceData, m interface{}) error {
 
     log.Println("Read SnmpPreDefinedTraps - Show JSON = ", safeCopyMap(snmpPreDefinedTraps))
 
-    if v, exists := snmpPreDefinedTraps["authorizationError"]; exists {
-        d.Set("authorizationerror", v)
-    }
-    if v, exists := snmpPreDefinedTraps["biosFailure"]; exists {
-        d.Set("biosfailure", v)
-    }
-    if v, exists := snmpPreDefinedTraps["configurationChange"]; exists {
-        d.Set("configurationchange", v)
-    }
-    if v, exists := snmpPreDefinedTraps["configurationSave"]; exists {
-        d.Set("configurationsave", v)
-    }
-    if v, exists := snmpPreDefinedTraps["fanFailure"]; exists {
-        d.Set("fanfailure", v)
-    }
-    if v, exists := snmpPreDefinedTraps["highVoltage"]; exists {
-        d.Set("highvoltage", v)
-    }
-    if v, exists := snmpPreDefinedTraps["linkUpLinkDown"]; exists {
-        d.Set("linkuplinkdown", v)
-    }
-    if v, exists := snmpPreDefinedTraps["lowDiskSpace"]; exists {
-        d.Set("lowdiskspace", v)
-    }
-    if v, exists := snmpPreDefinedTraps["lowVoltage"]; exists {
-        d.Set("lowvoltage", v)
-    }
-    if v, exists := snmpPreDefinedTraps["overTemperature"]; exists {
-        d.Set("overtemperature", v)
-    }
-    if v, exists := snmpPreDefinedTraps["powerSupplyFailure"]; exists {
-        d.Set("powersupplyfailure", v)
-    }
-    if v, exists := snmpPreDefinedTraps["raidVolumeState"]; exists {
-        d.Set("raidvolumestate", v)
-    }
-    if v, exists := snmpPreDefinedTraps["vrrpv2AuthFailure"]; exists {
-        d.Set("vrrpv2authfailure", v)
-    }
-    if v, exists := snmpPreDefinedTraps["vrrpv2NewMaster"]; exists {
-        d.Set("vrrpv2newmaster", v)
-    }
-    if v, exists := snmpPreDefinedTraps["vrrpv3NewMaster"]; exists {
-        d.Set("vrrpv3newmaster", v)
-    }
-    if v, exists := snmpPreDefinedTraps["vrrpv3ProtoError"]; exists {
-        d.Set("vrrpv3protoerror", v)
-    }
-    if v, exists := snmpPreDefinedTraps["coldStart"]; exists {
-        d.Set("coldstart", v)
-    }
-    if v, exists := snmpPreDefinedTraps["clusterXLFailover"]; exists {
-        d.Set("clusterxlfailover", v)
-    }
-    if v, exists := snmpPreDefinedTraps["lowDiskSpaceAllPartitions"]; exists {
-        d.Set("lowdiskspaceallpartitions", v)
-    }
-    d.SetId(d.Id())
-    return nil
+        return gaiaReadState(d, resourceGaiaSnmpPreDefinedTraps().Schema, snmpPreDefinedTraps)
 }
 
 func updateGaiaSnmpPreDefinedTraps(d *schema.ResourceData, m interface{}) error {

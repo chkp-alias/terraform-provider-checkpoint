@@ -219,14 +219,9 @@ func readGaiaTacacs(d *schema.ResourceData, m interface{}) error {
         }
     }
     if v, exists := tacacs["super-user-uid"]; exists {
-        if f, ok := v.(float64); ok {
-            d.Set("super_user_uid", int(f))
-        } else if s, ok := v.(string); ok {
-            var _n int
-            if _, _err := fmt.Sscanf(s, "%d", &_n); _err == nil {
-                d.Set("super_user_uid", _n)
-            }
-        }
+        value, err := gaiaReadValue(v, resourceGaiaTacacs().Schema["super_user_uid"], "super_user_uid", 0)
+        if err != nil { return err }
+        if err := d.Set("super_user_uid", value); err != nil { return err }
     }
     if v, exists := tacacs["servers"]; exists {
         if rawList, ok := v.([]interface{}); ok {

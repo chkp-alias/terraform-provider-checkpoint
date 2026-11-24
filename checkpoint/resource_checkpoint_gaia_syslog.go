@@ -10,7 +10,7 @@ import (
 
 )
 func resourceGaiaSyslog() *schema.Resource {   
-    return &schema.Resource{
+    return gaiaReadResource("syslog", &schema.Resource{
         Create: createGaiaSyslog,
         Read:   readGaiaSyslog,
         Update: updateGaiaSyslog,
@@ -97,7 +97,7 @@ func resourceGaiaSyslog() *schema.Resource {
                 Description: `Relevant for commands on Scalable and ElasticXL platforms only.<br>When member-id is provided in the login request,<br>show commands during the session will be executed on the specified member,<br>unless a different member-id is provided in a successive requests<br>Set operations will be performed on all members`,
             },
         },
-    }
+    })
 }
 
 func createGaiaSyslog(d *schema.ResourceData, m interface{}) error {
@@ -257,66 +257,7 @@ func readGaiaSyslog(d *schema.ResourceData, m interface{}) error {
 
     log.Println("Read Syslog - Show JSON = ", safeCopyMap(syslog))
 
-    if v, exists := syslog["audit-log"]; exists {
-        if b, ok := v.(bool); ok {
-            d.Set("audit_log", b)
-        } else if s, ok := v.(string); ok {
-            d.Set("audit_log", s == "true")
-        }
-    }
-    if v, exists := syslog["cp-logs"]; exists {
-        if b, ok := v.(bool); ok {
-            d.Set("cp_logs", b)
-        } else if s, ok := v.(string); ok {
-            d.Set("cp_logs", s == "true")
-        }
-    }
-    if v, exists := syslog["send-to-mgmt"]; exists {
-        if b, ok := v.(bool); ok {
-            d.Set("send_to_mgmt", b)
-        } else if s, ok := v.(string); ok {
-            d.Set("send_to_mgmt", s == "true")
-        }
-    }
-    if v, exists := syslog["filename"]; exists {
-        d.Set("filename", fmt.Sprintf("%v", v))
-    }
-    if v, exists := syslog["tls-configuration"]; exists {
-        d.Set("tls_configuration", v)
-    }
-    if v, exists := syslog["forwarded-logs-files"]; exists {
-        if rawList, ok := v.([]interface{}); ok {
-            knownPaths := map[string]bool{}
-            if cur, ok := d.GetOk("forwarded_logs_files"); ok {
-                for _, item := range cur.([]interface{}) {
-                    if m, ok := item.(map[string]interface{}); ok {
-                        if p, ok := m["path"].(string); ok && p != "" {
-                            knownPaths[p] = true
-                        }
-                    }
-                }
-            }
-            filtered := make([]interface{}, 0, len(rawList))
-            for _, item := range rawList {
-                if m, ok := item.(map[string]interface{}); ok {
-                    entry := map[string]interface{}{}
-                    if val, ok := m["path"]; ok { entry["path"] = fmt.Sprintf("%v", val) }
-                    if val, ok := m["tag"]; ok { entry["tag"] = fmt.Sprintf("%v", val) }
-                    if path, ok := entry["path"].(string); ok {
-                        if len(knownPaths) == 0 || knownPaths[path] {
-                            filtered = append(filtered, entry)
-                        }
-                    }
-                }
-            }
-            d.Set("forwarded_logs_files", filtered)
-        }
-    }
-    if v, exists := syslog["member-id"]; exists {
-        d.Set("member_id", fmt.Sprintf("%v", v))
-    }
-    d.SetId(d.Id())
-    return nil
+        return gaiaReadState(d, resourceGaiaSyslog().Schema, syslog)
 }
 
 func updateGaiaSyslog(d *schema.ResourceData, m interface{}) error {

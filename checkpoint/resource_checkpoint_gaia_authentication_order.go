@@ -10,7 +10,7 @@ import (
 
 )
 func resourceGaiaAuthenticationOrder() *schema.Resource {   
-    return &schema.Resource{
+    return gaiaReadResource("authentication-order", &schema.Resource{
         Create: createGaiaAuthenticationOrder,
         Read:   readGaiaAuthenticationOrder,
         Update: updateGaiaAuthenticationOrder,
@@ -85,7 +85,7 @@ func resourceGaiaAuthenticationOrder() *schema.Resource {
                 Description: `Relevant for commands on Scalable and ElasticXL platforms only.<br>When member-id is provided in the login request,<br>show commands during the session will be executed on the specified member,<br>unless a different member-id is provided in a successive requests<br>Set operations will be performed on all members`,
             },
         },
-    }
+    })
 }
 
 func createGaiaAuthenticationOrder(d *schema.ResourceData, m interface{}) error {
@@ -231,20 +231,7 @@ func readGaiaAuthenticationOrder(d *schema.ResourceData, m interface{}) error {
 
     log.Println("Read AuthenticationOrder - Show JSON = ", safeCopyMap(authenticationOrder))
 
-    if v, exists := authenticationOrder["radius"]; exists {
-        d.Set("radius", v)
-    }
-    if v, exists := authenticationOrder["tacacs"]; exists {
-        d.Set("tacacs", v)
-    }
-    if v, exists := authenticationOrder["local"]; exists {
-        d.Set("local", v)
-    }
-    if v, exists := authenticationOrder["member-id"]; exists {
-        d.Set("member_id", fmt.Sprintf("%v", v))
-    }
-    d.SetId(d.Id())
-    return nil
+        return gaiaReadState(d, resourceGaiaAuthenticationOrder().Schema, authenticationOrder)
 }
 
 func updateGaiaAuthenticationOrder(d *schema.ResourceData, m interface{}) error {

@@ -10,7 +10,7 @@ import (
 
 )
 func resourceGaiaPhysicalInterface() *schema.Resource {   
-    return &schema.Resource{
+    return gaiaReadResource("physical-interface", &schema.Resource{
         Create: createGaiaPhysicalInterface,
         Read:   readGaiaPhysicalInterface,
         Update: updateGaiaPhysicalInterface,
@@ -291,7 +291,7 @@ func resourceGaiaPhysicalInterface() *schema.Resource {
                 Description: `Relevant for commands on Scalable and ElasticXL platforms only.<br>When member-id is provided in the login request,<br>show commands during the session will be executed on the specified member,<br>unless a different member-id is provided in a successive requests<br>Set operations will be performed on all members`,
             },
         },
-    }
+    })
 }
 
 func createGaiaPhysicalInterface(d *schema.ResourceData, m interface{}) error {
@@ -579,188 +579,7 @@ func readGaiaPhysicalInterface(d *schema.ResourceData, m interface{}) error {
 
     log.Println("Read PhysicalInterface - Show JSON = ", safeCopyMap(physicalInterface))
 
-    if v, exists := physicalInterface["sd-wan"]; exists {
-        d.Set("sd_wan", v)
-    }
-    if v, exists := physicalInterface["name"]; exists {
-        d.Set("name", fmt.Sprintf("%v", v))
-    }
-    if v, exists := physicalInterface["ip-conflicts"]; exists {
-        if b, ok := v.(bool); ok {
-            d.Set("ip_conflicts", b)
-        } else if s, ok := v.(string); ok {
-            d.Set("ip_conflicts", s == "true")
-        }
-    }
-    if v, exists := physicalInterface["dhcp6"]; exists {
-        d.Set("dhcp6", v)
-    }
-    if v, exists := physicalInterface["dhcp"]; exists {
-        d.Set("dhcp", v)
-    }
-    if v, exists := physicalInterface["link-state"]; exists {
-        if b, ok := v.(bool); ok {
-            d.Set("link_state", b)
-        } else if s, ok := v.(string); ok {
-            d.Set("link_state", s == "true")
-        }
-    }
-    if v, exists := physicalInterface["speed"]; exists {
-        d.Set("speed", fmt.Sprintf("%v", v))
-    }
-    if v, exists := physicalInterface["duplex"]; exists {
-        d.Set("duplex", fmt.Sprintf("%v", v))
-    }
-    if v, exists := physicalInterface["tx-bytes"]; exists {
-        if f, ok := v.(float64); ok {
-            d.Set("tx_bytes", int(f))
-        } else if s, ok := v.(string); ok {
-            var _n int
-            if _, _err := fmt.Sscanf(s, "%d", &_n); _err == nil {
-                d.Set("tx_bytes", _n)
-            }
-        }
-    }
-    if v, exists := physicalInterface["tx-packets"]; exists {
-        if f, ok := v.(float64); ok {
-            d.Set("tx_packets", int(f))
-        } else if s, ok := v.(string); ok {
-            var _n int
-            if _, _err := fmt.Sscanf(s, "%d", &_n); _err == nil {
-                d.Set("tx_packets", _n)
-            }
-        }
-    }
-    if v, exists := physicalInterface["rx-bytes"]; exists {
-        if f, ok := v.(float64); ok {
-            d.Set("rx_bytes", int(f))
-        } else if s, ok := v.(string); ok {
-            var _n int
-            if _, _err := fmt.Sscanf(s, "%d", &_n); _err == nil {
-                d.Set("rx_bytes", _n)
-            }
-        }
-    }
-    if v, exists := physicalInterface["rx-packets"]; exists {
-        if f, ok := v.(float64); ok {
-            d.Set("rx_packets", int(f))
-        } else if s, ok := v.(string); ok {
-            var _n int
-            if _, _err := fmt.Sscanf(s, "%d", &_n); _err == nil {
-                d.Set("rx_packets", _n)
-            }
-        }
-    }
-    if v, exists := physicalInterface["mtu"]; exists {
-        if f, ok := v.(float64); ok {
-            d.Set("mtu", int(f))
-        } else if s, ok := v.(string); ok {
-            var _n int
-            if _, _err := fmt.Sscanf(s, "%d", &_n); _err == nil {
-                d.Set("mtu", _n)
-            }
-        }
-    }
-    if v, exists := physicalInterface["ipv4-address"]; exists {
-        d.Set("ipv4_address", fmt.Sprintf("%v", v))
-    }
-    if v, exists := physicalInterface["ipv4-mask-length"]; exists {
-        if f, ok := v.(float64); ok {
-            d.Set("ipv4_mask_length", int(f))
-        } else if s, ok := v.(string); ok {
-            var _n int
-            if _, _err := fmt.Sscanf(s, "%d", &_n); _err == nil {
-                d.Set("ipv4_mask_length", _n)
-            }
-        }
-    }
-    if v, exists := physicalInterface["enabled"]; exists {
-        if b, ok := v.(bool); ok {
-            d.Set("enabled", b)
-        } else if s, ok := v.(string); ok {
-            d.Set("enabled", s == "true")
-        }
-    }
-    if v, exists := physicalInterface["ipv6-autoconfig"]; exists {
-        if b, ok := v.(bool); ok {
-            d.Set("ipv6_autoconfig", b)
-        } else if s, ok := v.(string); ok {
-            d.Set("ipv6_autoconfig", s == "true")
-        }
-    }
-    if v, exists := physicalInterface["comments"]; exists {
-        d.Set("comments", fmt.Sprintf("%v", v))
-    }
-    if v, exists := physicalInterface["ipv6-address"]; exists {
-        _val := fmt.Sprintf("%v", v)
-        if strings.HasPrefix(_val, "Not") {
-            _val = ""
-        }
-        d.Set("ipv6_address", _val)
-    }
-    if v, exists := physicalInterface["ipv6-mask-length"]; exists {
-        if f, ok := v.(float64); ok {
-            d.Set("ipv6_mask_length", int(f))
-        } else if s, ok := v.(string); ok {
-            var _n int
-            if _, _err := fmt.Sscanf(s, "%d", &_n); _err == nil {
-                d.Set("ipv6_mask_length", _n)
-            }
-        }
-    }
-    if v, exists := physicalInterface["ipv6-local-link-address"]; exists {
-        d.Set("ipv6_local_link_address", fmt.Sprintf("%v", v))
-    }
-    if v, exists := physicalInterface["status"]; exists {
-        d.Set("status", v)
-    }
-    if v, exists := physicalInterface["auto-negotiation"]; exists {
-        if b, ok := v.(bool); ok {
-            d.Set("auto_negotiation", b)
-        } else if s, ok := v.(string); ok {
-            d.Set("auto_negotiation", s == "true")
-        }
-    }
-    if v, exists := physicalInterface["monitor-mode"]; exists {
-        if b, ok := v.(bool); ok {
-            d.Set("monitor_mode", b)
-        } else if s, ok := v.(string); ok {
-            d.Set("monitor_mode", s == "true")
-        }
-    }
-    if v, exists := physicalInterface["mac-addr"]; exists {
-        d.Set("mac_addr", fmt.Sprintf("%v", v))
-    }
-    if v, exists := physicalInterface["rx-ringsize"]; exists {
-        if f, ok := v.(float64); ok {
-            d.Set("rx_ringsize", int(f))
-        } else if s, ok := v.(string); ok {
-            var _n int
-            if _, _err := fmt.Sscanf(s, "%d", &_n); _err == nil {
-                d.Set("rx_ringsize", _n)
-            }
-        }
-    }
-    if v, exists := physicalInterface["tx-ringsize"]; exists {
-        if f, ok := v.(float64); ok {
-            d.Set("tx_ringsize", int(f))
-        } else if s, ok := v.(string); ok {
-            var _n int
-            if _, _err := fmt.Sscanf(s, "%d", &_n); _err == nil {
-                d.Set("tx_ringsize", _n)
-            }
-        }
-    }
-    if v, exists := physicalInterface["member-id"]; exists {
-        d.Set("member_id", fmt.Sprintf("%v", v))
-    }
-    if v, exists := physicalInterface["virtual-system-id"]; exists {
-        if err := gaiaSetInt(d, "virtual_system_id", v); err != nil {
-            return err
-        }
-    }
-    d.SetId(d.Id())
-    return nil
+        return gaiaReadState(d, resourceGaiaPhysicalInterface().Schema, physicalInterface)
 }
 
 func updateGaiaPhysicalInterface(d *schema.ResourceData, m interface{}) error {

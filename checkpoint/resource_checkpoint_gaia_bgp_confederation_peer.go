@@ -10,7 +10,7 @@ import (
 
 )
 func resourceGaiaBgpConfederationPeer() *schema.Resource {   
-    return &schema.Resource{
+    return gaiaReadResource("bgp-confederation-peer", &schema.Resource{
         Create: createGaiaBgpConfederationPeer,
         Read:   readGaiaBgpConfederationPeer,
         Update: updateGaiaBgpConfederationPeer,
@@ -167,7 +167,7 @@ func resourceGaiaBgpConfederationPeer() *schema.Resource {
                 Description: `Specifies the default weight associated with each route accepted from this peer. This can be overriden by the weight specified in the import policy.`,
             },
         },
-    }
+    })
 }
 
 func createGaiaBgpConfederationPeer(d *schema.ResourceData, m interface{}) error {
@@ -383,131 +383,7 @@ func readGaiaBgpConfederationPeer(d *schema.ResourceData, m interface{}) error {
 
     log.Println("Read BgpConfederationPeer - Show JSON = ", safeCopyMap(bgpConfederationPeer))
 
-    if v, exists := bgpConfederationPeer["accept-routes"]; exists {
-        d.Set("accept_routes", fmt.Sprintf("%v", v))
-    }
-    if v, exists := bgpConfederationPeer["authtype"]; exists {
-        if _m, _ok := v.(map[string]interface{}); _ok {
-            d.Set("authtype", []interface{}{map[string]interface{}{
-                "type":   func() string { if _v, _ok := _m["type"]; _ok && _v != nil { return fmt.Sprintf("%v", _v) }; return "" }(),
-                "secret": func() string { if _v, _ok := _m["secret"]; _ok && _v != nil { return fmt.Sprintf("%v", _v) }; return "" }(),
-            }})
-        }
-    }
-    if v, exists := bgpConfederationPeer["capability"]; exists {
-        d.Set("capability", fmt.Sprintf("%v", v))
-    }
-    if v, exists := bgpConfederationPeer["comment"]; exists {
-        d.Set("comment", fmt.Sprintf("%v", v))
-    }
-    if v, exists := bgpConfederationPeer["enable-graceful-restart"]; exists {
-        if b, ok := v.(bool); ok {
-            d.Set("enable_graceful_restart", b)
-        } else if s, ok := v.(string); ok {
-            d.Set("enable_graceful_restart", s == "true")
-        }
-    }
-    if v, exists := bgpConfederationPeer["graceful-restart-stalepath-time"]; exists {
-        if f, ok := v.(float64); ok {
-            d.Set("graceful_restart_stalepath_time", int(f))
-        }
-    }
-    if v, exists := bgpConfederationPeer["holdtime"]; exists {
-        if f, ok := v.(float64); ok {
-            d.Set("holdtime", int(f))
-        }
-    }
-    if v, exists := bgpConfederationPeer["enable-ignore-first-ashop"]; exists {
-        if b, ok := v.(bool); ok {
-            d.Set("enable_ignore_first_ashop", b)
-        } else if s, ok := v.(string); ok {
-            d.Set("enable_ignore_first_ashop", s == "true")
-        }
-    }
-    if v, exists := bgpConfederationPeer["keepalive"]; exists {
-        if f, ok := v.(float64); ok {
-            d.Set("keepalive", int(f))
-        }
-    }
-    if v, exists := bgpConfederationPeer["local-address"]; exists {
-        d.Set("local_address", fmt.Sprintf("%v", v))
-    }
-    if v, exists := bgpConfederationPeer["enable-log-state-transitions"]; exists {
-        if b, ok := v.(bool); ok {
-            d.Set("enable_log_state_transitions", b)
-        } else if s, ok := v.(string); ok {
-            d.Set("enable_log_state_transitions", s == "true")
-        }
-    }
-    if v, exists := bgpConfederationPeer["enable-log-warnings"]; exists {
-        if b, ok := v.(bool); ok {
-            d.Set("enable_log_warnings", b)
-        } else if s, ok := v.(string); ok {
-            d.Set("enable_log_warnings", s == "true")
-        }
-    }
-    if v, exists := bgpConfederationPeer["enable-no-aggregator-id"]; exists {
-        if b, ok := v.(bool); ok {
-            d.Set("enable_no_aggregator_id", b)
-        } else if s, ok := v.(string); ok {
-            d.Set("enable_no_aggregator_id", s == "true")
-        }
-    }
-    if v, exists := bgpConfederationPeer["outgoing-interface"]; exists {
-        d.Set("outgoing_interface", fmt.Sprintf("%v", v))
-    }
-    if v, exists := bgpConfederationPeer["enable-passive-tcp"]; exists {
-        if b, ok := v.(bool); ok {
-            d.Set("enable_passive_tcp", b)
-        } else if s, ok := v.(string); ok {
-            d.Set("enable_passive_tcp", s == "true")
-        }
-    }
-    if v, exists := bgpConfederationPeer["peer"]; exists {
-        d.Set("peer", fmt.Sprintf("%v", v))
-    }
-    if v, exists := bgpConfederationPeer["enable-ping"]; exists {
-        if b, ok := v.(bool); ok {
-            d.Set("enable_ping", b)
-        } else if s, ok := v.(string); ok {
-            d.Set("enable_ping", s == "true")
-        }
-    }
-    if v, exists := bgpConfederationPeer["enable-route-refresh"]; exists {
-        if b, ok := v.(bool); ok {
-            d.Set("enable_route_refresh", b)
-        } else if s, ok := v.(string); ok {
-            d.Set("enable_route_refresh", s == "true")
-        }
-    }
-    if v, exists := bgpConfederationPeer["enable-send-keepalives"]; exists {
-        if b, ok := v.(bool); ok {
-            d.Set("enable_send_keepalives", b)
-        } else if s, ok := v.(string); ok {
-            d.Set("enable_send_keepalives", s == "true")
-        }
-    }
-    if v, exists := bgpConfederationPeer["throttle-count"]; exists {
-        if f, ok := v.(float64); ok {
-            d.Set("throttle_count", int(f))
-        }
-    }
-    if v, exists := bgpConfederationPeer["trace"]; exists {
-        d.Set("trace", v.([]interface{}))
-    }
-    if v, exists := bgpConfederationPeer["member-as"]; exists {
-        d.Set("member_as", fmt.Sprintf("%v", v))
-    }
-    if v, exists := bgpConfederationPeer["peer-type"]; exists {
-        d.Set("peer_type", fmt.Sprintf("%v", v))
-    }
-    if v, exists := bgpConfederationPeer["weight"]; exists {
-        if f, ok := v.(float64); ok {
-            d.Set("weight", int(f))
-        }
-    }
-    d.SetId(d.Id())
-    return nil
+        return gaiaReadState(d, resourceGaiaBgpConfederationPeer().Schema, bgpConfederationPeer)
 }
 
 func updateGaiaBgpConfederationPeer(d *schema.ResourceData, m interface{}) error {

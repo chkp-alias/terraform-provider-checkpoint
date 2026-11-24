@@ -10,7 +10,7 @@ import (
 
 )
 func resourceGaiaScheduledJob() *schema.Resource {   
-    return &schema.Resource{
+    return gaiaReadResource("scheduled-job", &schema.Resource{
         Create: createGaiaScheduledJob,
         Read:   readGaiaScheduledJob,
         Update: updateGaiaScheduledJob,
@@ -128,7 +128,7 @@ func resourceGaiaScheduledJob() *schema.Resource {
                 Description: `Relevant for commands on Scalable and ElasticXL platforms only.<br>When member-id is provided in the login request,<br>show commands during the session will be executed on the specified member,<br>unless a different member-id is provided in a successive requests<br>Set operations will be performed on all members`,
             },
         },
-    }
+    })
 }
 
 func createGaiaScheduledJob(d *schema.ResourceData, m interface{}) error {
@@ -296,22 +296,7 @@ func readGaiaScheduledJob(d *schema.ResourceData, m interface{}) error {
 
     log.Println("Read ScheduledJob - Show JSON = ", safeCopyMap(scheduledJob))
 
-    if v, exists := scheduledJob["name"]; exists {
-        d.Set("name", fmt.Sprintf("%v", v))
-    }
-    if v, exists := scheduledJob["command"]; exists {
-        cmd := fmt.Sprintf("%v", v)
-        cmd = strings.ReplaceAll(cmd, "\\ ", " ")
-        d.Set("command", cmd)
-    }
-    if v, exists := scheduledJob["recurrence"]; exists {
-        d.Set("recurrence", v)
-    }
-    if v, exists := scheduledJob["member-id"]; exists {
-        d.Set("member_id", fmt.Sprintf("%v", v))
-    }
-    d.SetId(d.Id())
-    return nil
+        return gaiaReadState(d, resourceGaiaScheduledJob().Schema, scheduledJob)
 }
 
 func updateGaiaScheduledJob(d *schema.ResourceData, m interface{}) error {

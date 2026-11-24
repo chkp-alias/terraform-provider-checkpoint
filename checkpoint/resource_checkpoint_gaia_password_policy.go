@@ -10,7 +10,7 @@ import (
 
 )
 func resourceGaiaPasswordPolicy() *schema.Resource {   
-    return &schema.Resource{
+    return gaiaReadResource("password-policy", &schema.Resource{
         Create: createGaiaPasswordPolicy,
         Read:   readGaiaPasswordPolicy,
         Update: updateGaiaPasswordPolicy,
@@ -166,7 +166,7 @@ func resourceGaiaPasswordPolicy() *schema.Resource {
                 Description: `Relevant for commands on Scalable and ElasticXL platforms only.<br>When member-id is provided in the login request,<br>show commands during the session will be executed on the specified member,<br>unless a different member-id is provided in a successive requests<br>Set operations will be performed on all members`,
             },
         },
-    }
+    })
 }
 
 func createGaiaPasswordPolicy(d *schema.ResourceData, m interface{}) error {
@@ -351,60 +351,7 @@ func readGaiaPasswordPolicy(d *schema.ResourceData, m interface{}) error {
 
     log.Println("Read PasswordPolicy - Show JSON = ", safeCopyMap(passwordPolicy))
 
-    if v, exists := passwordPolicy["lock-settings"]; exists {
-        if m, ok := v.(map[string]interface{}); ok {
-            lsMap := map[string]interface{}{
-                "password_expiration_days":                     m["password-expiration-days"],
-                "password_expiration_warning_days":             m["password-expiration-warning-days"],
-                "password_expiration_maximum_days_before_lock": m["password-expiration-maximum-days-before-lock"],
-                "must_one_time_password_enabled":               m["must-one-time-password-enabled"],
-            }
-            if ia, ok := m["inactivity-settings"].(map[string]interface{}); ok {
-                lsMap["inactivity_settings"] = []interface{}{map[string]interface{}{
-                    "lock_unused_accounts_enabled": ia["lock-unused-accounts-enabled"],
-                    "inactivity_threshold_days":    ia["inactivity-threshold-days"],
-                }}
-            }
-            if fa, ok := m["failed-attempts-settings"].(map[string]interface{}); ok {
-                lsMap["failed_attempts_settings"] = []interface{}{map[string]interface{}{
-                    "failed_lock_duration_seconds":  fa["failed-lock-duration-seconds"],
-                    "failed_lock_enforced_on_admin": fa["failed-lock-enforced-on-admin"],
-                    "failed_lock_enabled":           fa["failed-lock-enabled"],
-                    "failed_attempts_allowed":       fa["failed-attempts-allowed"],
-                }}
-            }
-            d.Set("lock_settings", []interface{}{lsMap})
-        }
-    }
-    if v, exists := passwordPolicy["password-history"]; exists {
-        if m, ok := v.(map[string]interface{}); ok {
-            d.Set("password_history", []interface{}{map[string]interface{}{
-                "check_history_enabled":   m["check-history-enabled"],
-                "repeated_history_length": m["repeated-history-length"],
-            }})
-        }
-    }
-    if v, exists := passwordPolicy["password-strength"]; exists {
-        if m, ok := v.(map[string]interface{}); ok {
-            d.Set("password_strength", []interface{}{map[string]interface{}{
-                "minimum_length":           m["minimum-length"],
-                "complexity":               m["complexity"],
-                "palindrome_check_enabled": m["palindrome-check-enabled"],
-            }})
-        }
-    }
-    if v, exists := passwordPolicy["all-users-require-two-factor-authentication"]; exists {
-        if b, ok := v.(bool); ok {
-            d.Set("all_users_require_two_factor_authentication", b)
-        } else if s, ok := v.(string); ok {
-            d.Set("all_users_require_two_factor_authentication", s == "true")
-        }
-    }
-    if v, exists := passwordPolicy["member-id"]; exists {
-        d.Set("member_id", fmt.Sprintf("%v", v))
-    }
-    d.SetId(d.Id())
-    return nil
+        return gaiaReadState(d, resourceGaiaPasswordPolicy().Schema, passwordPolicy)
 }
 
 func updateGaiaPasswordPolicy(d *schema.ResourceData, m interface{}) error {

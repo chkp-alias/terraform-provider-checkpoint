@@ -10,7 +10,7 @@ import (
 
 )
 func resourceGaiaScheduledSnapshot() *schema.Resource {   
-    return &schema.Resource{
+    return gaiaReadResource("scheduled-snapshot", &schema.Resource{
         Create: createGaiaScheduledSnapshot,
         Read:   readGaiaScheduledSnapshot,
         Update: updateGaiaScheduledSnapshot,
@@ -165,7 +165,7 @@ func resourceGaiaScheduledSnapshot() *schema.Resource {
                 Description: `Relevant for commands on Scalable and ElasticXL platforms only.<br>When member-id is provided in the login request,<br>show commands during the session will be executed on the specified member,<br>unless a different member-id is provided in a successive requests<br>Set operations will be performed on all members`,
             },
         },
-    }
+    })
 }
 
 func createGaiaScheduledSnapshot(d *schema.ResourceData, m interface{}) error {
@@ -357,33 +357,7 @@ func readGaiaScheduledSnapshot(d *schema.ResourceData, m interface{}) error {
 
     log.Println("Read ScheduledSnapshot - Show JSON = ", safeCopyMap(scheduledSnapshot))
 
-    if v, exists := scheduledSnapshot["enabled"]; exists {
-        if b, ok := v.(bool); ok {
-            d.Set("enabled", b)
-        } else if s, ok := v.(string); ok {
-            d.Set("enabled", s == "true")
-        }
-    }
-    if v, exists := scheduledSnapshot["name-prefix"]; exists {
-        d.Set("name_prefix", fmt.Sprintf("%v", v))
-    }
-    if v, exists := scheduledSnapshot["description"]; exists {
-        d.Set("description", fmt.Sprintf("%v", v))
-    }
-    if v, exists := scheduledSnapshot["host"]; exists {
-        d.Set("host", v)
-    }
-    if v, exists := scheduledSnapshot["recurrence"]; exists {
-        d.Set("recurrence", v)
-    }
-    if v, exists := scheduledSnapshot["retention-policy"]; exists {
-        d.Set("retention_policy", v)
-    }
-    if v, exists := scheduledSnapshot["member-id"]; exists {
-        d.Set("member_id", fmt.Sprintf("%v", v))
-    }
-    d.SetId(d.Id())
-    return nil
+        return gaiaReadState(d, resourceGaiaScheduledSnapshot().Schema, scheduledSnapshot)
 }
 
 func updateGaiaScheduledSnapshot(d *schema.ResourceData, m interface{}) error {

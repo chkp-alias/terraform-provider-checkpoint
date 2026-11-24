@@ -10,7 +10,7 @@ import (
 
 )
 func resourceGaiaLoopbackInterface() *schema.Resource {   
-    return &schema.Resource{
+    return gaiaReadResource("loopback-interface", &schema.Resource{
         Create: createGaiaLoopbackInterface,
         Read:   readGaiaLoopbackInterface,
         Update: updateGaiaLoopbackInterface,
@@ -125,7 +125,7 @@ func resourceGaiaLoopbackInterface() *schema.Resource {
                 Description: `N/A`,
             },
         },
-    }
+    })
 }
 
 func createGaiaLoopbackInterface(d *schema.ResourceData, m interface{}) error {
@@ -298,109 +298,7 @@ func readGaiaLoopbackInterface(d *schema.ResourceData, m interface{}) error {
 
     log.Println("Read LoopbackInterface - Show JSON = ", safeCopyMap(loopbackInterface))
 
-    if v, exists := loopbackInterface["link-state"]; exists {
-        if b, ok := v.(bool); ok {
-            d.Set("link_state", b)
-        } else if s, ok := v.(string); ok {
-            d.Set("link_state", s == "true")
-        }
-    }
-    if v, exists := loopbackInterface["speed"]; exists {
-        d.Set("speed", fmt.Sprintf("%v", v))
-    }
-    if v, exists := loopbackInterface["duplex"]; exists {
-        d.Set("duplex", fmt.Sprintf("%v", v))
-    }
-    if v, exists := loopbackInterface["tx-bytes"]; exists {
-        if f, ok := v.(float64); ok {
-            d.Set("tx_bytes", int(f))
-        } else if s, ok := v.(string); ok {
-            var _n int
-            if _, _err := fmt.Sscanf(s, "%d", &_n); _err == nil {
-                d.Set("tx_bytes", _n)
-            }
-        }
-    }
-    if v, exists := loopbackInterface["tx-packets"]; exists {
-        if f, ok := v.(float64); ok {
-            d.Set("tx_packets", int(f))
-        } else if s, ok := v.(string); ok {
-            var _n int
-            if _, _err := fmt.Sscanf(s, "%d", &_n); _err == nil {
-                d.Set("tx_packets", _n)
-            }
-        }
-    }
-    if v, exists := loopbackInterface["rx-bytes"]; exists {
-        if f, ok := v.(float64); ok {
-            d.Set("rx_bytes", int(f))
-        } else if s, ok := v.(string); ok {
-            var _n int
-            if _, _err := fmt.Sscanf(s, "%d", &_n); _err == nil {
-                d.Set("rx_bytes", _n)
-            }
-        }
-    }
-    if v, exists := loopbackInterface["rx-packets"]; exists {
-        if f, ok := v.(float64); ok {
-            d.Set("rx_packets", int(f))
-        } else if s, ok := v.(string); ok {
-            var _n int
-            if _, _err := fmt.Sscanf(s, "%d", &_n); _err == nil {
-                d.Set("rx_packets", _n)
-            }
-        }
-    }
-    if v, exists := loopbackInterface["mtu"]; exists {
-        d.Set("mtu", fmt.Sprintf("%v", v))
-    }
-    if v, exists := loopbackInterface["ipv4-address"]; exists {
-        d.Set("ipv4_address", fmt.Sprintf("%v", v))
-    }
-    if v, exists := loopbackInterface["ipv4-mask-length"]; exists {
-        d.Set("ipv4_mask_length", fmt.Sprintf("%v", v))
-    }
-    if v, exists := loopbackInterface["name"]; exists {
-        d.Set("name", fmt.Sprintf("%v", v))
-    }
-    if v, exists := loopbackInterface["enabled"]; exists {
-        if b, ok := v.(bool); ok {
-            d.Set("enabled", b)
-        } else if s, ok := v.(string); ok {
-            d.Set("enabled", s == "true")
-        }
-    }
-    if v, exists := loopbackInterface["ipv6-autoconfig"]; exists {
-        if b, ok := v.(bool); ok {
-            d.Set("ipv6_autoconfig", b)
-        } else if s, ok := v.(string); ok {
-            d.Set("ipv6_autoconfig", s == "true")
-        }
-    }
-    if v, exists := loopbackInterface["comments"]; exists {
-        d.Set("comments", fmt.Sprintf("%v", v))
-    }
-    if v, exists := loopbackInterface["ipv6-address"]; exists {
-        _val := fmt.Sprintf("%v", v)
-        if strings.HasPrefix(_val, "Not") {
-            _val = ""
-        }
-        d.Set("ipv6_address", _val)
-    }
-    if v, exists := loopbackInterface["ipv6-mask-length"]; exists {
-        d.Set("ipv6_mask_length", fmt.Sprintf("%v", v))
-    }
-    if v, exists := loopbackInterface["ipv6-local-link-address"]; exists {
-        d.Set("ipv6_local_link_address", fmt.Sprintf("%v", v))
-    }
-    if v, exists := loopbackInterface["member-id"]; exists {
-        d.Set("member_id", fmt.Sprintf("%v", v))
-    }
-    if v, exists := loopbackInterface["virtual-system-id"]; exists {
-        d.Set("virtual_system_id", fmt.Sprintf("%v", v))
-    }
-    d.SetId(d.Id())
-    return nil
+        return gaiaReadState(d, resourceGaiaLoopbackInterface().Schema, loopbackInterface)
 }
 
 func updateGaiaLoopbackInterface(d *schema.ResourceData, m interface{}) error {

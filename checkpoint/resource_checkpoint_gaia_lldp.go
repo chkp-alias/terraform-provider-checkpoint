@@ -10,7 +10,7 @@ import (
 
 )
 func resourceGaiaLldp() *schema.Resource {   
-    return &schema.Resource{
+    return gaiaReadResource("lldp", &schema.Resource{
         Create: createGaiaLldp,
         Read:   readGaiaLldp,
         Update: updateGaiaLldp,
@@ -122,7 +122,7 @@ func resourceGaiaLldp() *schema.Resource {
                 Description: `Relevant for commands on Scalable and ElasticXL platforms only.<br>When member-id is provided in the login request,<br>show commands during the session will be executed on the specified member,<br>unless a different member-id is provided in a successive requests<br>Set operations will be performed on all members`,
             },
         },
-    }
+    })
 }
 
 func createGaiaLldp(d *schema.ResourceData, m interface{}) error {
@@ -297,38 +297,7 @@ func readGaiaLldp(d *schema.ResourceData, m interface{}) error {
 
     log.Println("Read Lldp - Show JSON = ", safeCopyMap(lldp))
 
-    if v, exists := lldp["enabled"]; exists {
-        if b, ok := v.(bool); ok {
-            d.Set("enabled", b)
-        } else if s, ok := v.(string); ok {
-            d.Set("enabled", s == "true")
-        }
-    }
-    if v, exists := lldp["interfaces"]; exists {
-        if items, ok := v.([]interface{}); ok {
-            out := make([]interface{}, 0, len(items))
-            for _, item := range items {
-                if m, ok := item.(map[string]interface{}); ok {
-                    out = append(out, map[string]interface{}{
-                        "interface_name": fmt.Sprintf("%v", m["interface-name"]),
-                        "mode":           fmt.Sprintf("%v", m["mode"]),
-                    })
-                }
-            }
-            d.Set("interfaces", out)
-        }
-    }
-    if v, exists := lldp["timers"]; exists {
-        d.Set("timers", v)
-    }
-    if v, exists := lldp["tlv"]; exists {
-        d.Set("tlv", v)
-    }
-    if v, exists := lldp["member-id"]; exists {
-        d.Set("member_id", fmt.Sprintf("%v", v))
-    }
-    d.SetId(d.Id())
-    return nil
+        return gaiaReadState(d, resourceGaiaLldp().Schema, lldp)
 }
 
 func updateGaiaLldp(d *schema.ResourceData, m interface{}) error {

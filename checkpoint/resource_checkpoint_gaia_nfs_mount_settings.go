@@ -10,7 +10,7 @@ import (
 
 )
 func resourceGaiaNfsMountSettings() *schema.Resource {   
-    return &schema.Resource{
+    return gaiaReadResource("nfs-mount-settings", &schema.Resource{
         Create: createGaiaNfsMountSettings,
         Read:   readGaiaNfsMountSettings,
         Update: updateGaiaNfsMountSettings,
@@ -35,7 +35,7 @@ func resourceGaiaNfsMountSettings() *schema.Resource {
                 Description: `Relevant for commands on Scalable and ElasticXL platforms only.<br>When member-id is provided in the login request,<br>show commands during the session will be executed on the specified member,<br>unless a different member-id is provided in a successive requests<br>Set operations will be performed on all members`,
             },
         },
-    }
+    })
 }
 
 func createGaiaNfsMountSettings(d *schema.ResourceData, m interface{}) error {
@@ -146,18 +146,7 @@ func readGaiaNfsMountSettings(d *schema.ResourceData, m interface{}) error {
 
     log.Println("Read NfsMountSettings - Show JSON = ", safeCopyMap(nfsMountSettings))
 
-    if v, exists := nfsMountSettings["NFS-Version-4-Settings"]; exists {
-        if settingsMap, ok := v.(map[string]interface{}); ok {
-            if timeout, timeoutExists := settingsMap["timeout"]; timeoutExists {
-                d.Set("timeout", timeout)
-            }
-        }
-    }
-    if v, exists := nfsMountSettings["member-id"]; exists {
-        d.Set("member_id", fmt.Sprintf("%v", v))
-    }
-    d.SetId(d.Id())
-    return nil
+        return gaiaReadState(d, resourceGaiaNfsMountSettings().Schema, nfsMountSettings)
 }
 
 func updateGaiaNfsMountSettings(d *schema.ResourceData, m interface{}) error {

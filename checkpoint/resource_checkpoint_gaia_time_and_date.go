@@ -11,7 +11,7 @@ import (
 
 )
 func resourceGaiaTimeAndDate() *schema.Resource {   
-    return &schema.Resource{
+    return gaiaReadResource("time-and-date", &schema.Resource{
         Create: createGaiaTimeAndDate,
         Read:   readGaiaTimeAndDate,
         Update: updateGaiaTimeAndDate,
@@ -61,7 +61,7 @@ func resourceGaiaTimeAndDate() *schema.Resource {
                 Description: `Relevant for commands on Scalable and ElasticXL platforms only.<br>When member-id is provided in the login request,<br>show commands during the session will be executed on the specified member,<br>unless a different member-id is provided in a successive requests<br>Set operations will be performed on all members`,
             },
         },
-    }
+    })
 }
 
 func createGaiaTimeAndDate(d *schema.ResourceData, m interface{}) error {
@@ -192,27 +192,7 @@ func readGaiaTimeAndDate(d *schema.ResourceData, m interface{}) error {
 
     log.Println("Read TimeAndDate - Show JSON = ", safeCopyMap(timeAndDate))
 
-    if v, exists := timeAndDate["date"]; exists {
-        if s, ok := v.(string); ok {
-            if len(s) == 10 && s[2] == '-' && s[5] == '-' {
-                s = s[6:10] + "-" + s[3:5] + "-" + s[0:2]
-            }
-            d.Set("date", s)
-        }
-    }
-    if v, exists := timeAndDate["timezone"]; exists {
-        if s, ok := v.(string); ok {
-            d.Set("timezone", strings.ReplaceAll(s, " / ", "/"))
-        }
-    }
-    if v, exists := timeAndDate["iso8601"]; exists {
-        d.Set("iso8601", fmt.Sprintf("%v", v))
-    }
-    if v, exists := timeAndDate["posix"]; exists {
-        d.Set("posix", fmt.Sprintf("%v", v))
-    }
-    d.SetId(d.Id())
-    return nil
+        return gaiaReadState(d, resourceGaiaTimeAndDate().Schema, timeAndDate)
 }
 
 func updateGaiaTimeAndDate(d *schema.ResourceData, m interface{}) error {
@@ -222,7 +202,7 @@ func updateGaiaTimeAndDate(d *schema.ResourceData, m interface{}) error {
 
     payload := map[string]interface{}{}
 
-    if v, ok := d.GetOk("time"); ok {
+    if v, ok := gaiaChangedValue(d, "time"); ok {
         payload["time"] = v.(string)
     }
 
@@ -230,7 +210,7 @@ func updateGaiaTimeAndDate(d *schema.ResourceData, m interface{}) error {
         payload["timezone"] = strings.ReplaceAll(strings.ReplaceAll(v.(string), " / ", "/"), "/", " / ")
     }
 
-    if v, ok := d.GetOk("date"); ok {
+    if v, ok := gaiaChangedValue(d, "date"); ok {
         payload["date"] = v.(string)
     }
 

@@ -10,7 +10,7 @@ import (
 
 )
 func resourceGaiaBgpInternalPeer() *schema.Resource {   
-    return &schema.Resource{
+    return gaiaReadResource("bgp-internal-peer", &schema.Resource{
         Create: createGaiaBgpInternalPeer,
         Read:   readGaiaBgpInternalPeer,
         Update: updateGaiaBgpInternalPeer,
@@ -242,7 +242,7 @@ func resourceGaiaBgpInternalPeer() *schema.Resource {
                 Description: `N/A`,
             },
         },
-    }
+    })
 }
 
 func createGaiaBgpInternalPeer(d *schema.ResourceData, m interface{}) error {
@@ -507,129 +507,7 @@ func readGaiaBgpInternalPeer(d *schema.ResourceData, m interface{}) error {
 
     log.Println("Read BgpInternalPeer - Show JSON = ", safeCopyMap(bgpInternalPeer))
 
-    if v, exists := bgpInternalPeer["accept-routes"]; exists {
-        d.Set("accept_routes", fmt.Sprintf("%v", v))
-    }
-    if v, exists := bgpInternalPeer["authtype"]; exists {
-        d.Set("authtype", v)
-    }
-    if v, exists := bgpInternalPeer["capability"]; exists {
-        d.Set("capability", fmt.Sprintf("%v", v))
-    }
-    if v, exists := bgpInternalPeer["comment"]; exists {
-        d.Set("comment", fmt.Sprintf("%v", v))
-    }
-    if v, exists := bgpInternalPeer["enable-graceful-restart"]; exists {
-        if b, ok := v.(bool); ok {
-            d.Set("enable_graceful_restart", b)
-        } else if s, ok := v.(string); ok {
-            d.Set("enable_graceful_restart", s == "true")
-        }
-    }
-    if v, exists := bgpInternalPeer["graceful-restart-stalepath-time"]; exists {
-        d.Set("graceful_restart_stalepath_time", fmt.Sprintf("%v", v))
-    }
-    if v, exists := bgpInternalPeer["holdtime"]; exists {
-        d.Set("holdtime", fmt.Sprintf("%v", v))
-    }
-    if v, exists := bgpInternalPeer["enable-ignore-first-ashop"]; exists {
-        if b, ok := v.(bool); ok {
-            d.Set("enable_ignore_first_ashop", b)
-        } else if s, ok := v.(string); ok {
-            d.Set("enable_ignore_first_ashop", s == "true")
-        }
-    }
-    if v, exists := bgpInternalPeer["keepalive"]; exists {
-        d.Set("keepalive", fmt.Sprintf("%v", v))
-    }
-    if v, exists := bgpInternalPeer["local-address"]; exists {
-        d.Set("local_address", fmt.Sprintf("%v", v))
-    }
-    if v, exists := bgpInternalPeer["enable-log-state-transitions"]; exists {
-        if b, ok := v.(bool); ok {
-            d.Set("enable_log_state_transitions", b)
-        } else if s, ok := v.(string); ok {
-            d.Set("enable_log_state_transitions", s == "true")
-        }
-    }
-    if v, exists := bgpInternalPeer["enable-log-warnings"]; exists {
-        if b, ok := v.(bool); ok {
-            d.Set("enable_log_warnings", b)
-        } else if s, ok := v.(string); ok {
-            d.Set("enable_log_warnings", s == "true")
-        }
-    }
-    if v, exists := bgpInternalPeer["enable-no-aggregator-id"]; exists {
-        if b, ok := v.(bool); ok {
-            d.Set("enable_no_aggregator_id", b)
-        } else if s, ok := v.(string); ok {
-            d.Set("enable_no_aggregator_id", s == "true")
-        }
-    }
-    if v, exists := bgpInternalPeer["outgoing-interface"]; exists {
-        d.Set("outgoing_interface", fmt.Sprintf("%v", v))
-    }
-    if v, exists := bgpInternalPeer["enable-passive-tcp"]; exists {
-        if b, ok := v.(bool); ok {
-            d.Set("enable_passive_tcp", b)
-        } else if s, ok := v.(string); ok {
-            d.Set("enable_passive_tcp", s == "true")
-        }
-    }
-    if v, exists := bgpInternalPeer["peer"]; exists {
-        d.Set("peer", fmt.Sprintf("%v", v))
-    }
-    if v, exists := bgpInternalPeer["enable-ping"]; exists {
-        if b, ok := v.(bool); ok {
-            d.Set("enable_ping", b)
-        } else if s, ok := v.(string); ok {
-            d.Set("enable_ping", s == "true")
-        }
-    }
-    if v, exists := bgpInternalPeer["enable-route-refresh"]; exists {
-        if b, ok := v.(bool); ok {
-            d.Set("enable_route_refresh", b)
-        } else if s, ok := v.(string); ok {
-            d.Set("enable_route_refresh", s == "true")
-        }
-    }
-    if v, exists := bgpInternalPeer["enable-send-keepalives"]; exists {
-        if b, ok := v.(bool); ok {
-            d.Set("enable_send_keepalives", b)
-        } else if s, ok := v.(string); ok {
-            d.Set("enable_send_keepalives", s == "true")
-        }
-    }
-    if v, exists := bgpInternalPeer["throttle-count"]; exists {
-        d.Set("throttle_count", fmt.Sprintf("%v", v))
-    }
-    if v, exists := bgpInternalPeer["trace"]; exists {
-        d.Set("trace", v.([]interface{}))
-    }
-    if v, exists := bgpInternalPeer["import-routemap-list"]; exists {
-        d.Set("import_routemap_list", v.([]interface{}))
-    }
-    if v, exists := bgpInternalPeer["ip-reachability"]; exists {
-        d.Set("ip_reachability", v)
-    }
-    if v, exists := bgpInternalPeer["peer-type"]; exists {
-        d.Set("peer_type", fmt.Sprintf("%v", v))
-    }
-    if v, exists := bgpInternalPeer["enable-suppress-default-originate"]; exists {
-        if b, ok := v.(bool); ok {
-            d.Set("enable_suppress_default_originate", b)
-        } else if s, ok := v.(string); ok {
-            d.Set("enable_suppress_default_originate", s == "true")
-        }
-    }
-    if v, exists := bgpInternalPeer["weight"]; exists {
-        d.Set("weight", fmt.Sprintf("%v", v))
-    }
-    if v, exists := bgpInternalPeer["member-id"]; exists {
-        d.Set("member_id", fmt.Sprintf("%v", v))
-    }
-    d.SetId(d.Id())
-    return nil
+        return gaiaReadState(d, resourceGaiaBgpInternalPeer().Schema, bgpInternalPeer)
 }
 
 func updateGaiaBgpInternalPeer(d *schema.ResourceData, m interface{}) error {

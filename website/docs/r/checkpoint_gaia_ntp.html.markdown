@@ -62,3 +62,8 @@ To specify optional read context or filters (`member_id`), use a JSON object wit
 `member_id` selects the member used for reads; it does not restrict later writes to that member. Gaia set operations retain the scope documented by the resource.
 
 Create a matching resource block before importing, and review `terraform plan` afterward. The importer first validates and records the lookup fields; Terraform then calls the resource reader to fetch existing configuration. Import does not create the resource or recover write-only values such as passwords.
+
+
+### Current collection state
+
+Legacy `add`/`remove` blocks describe write actions. The current collection is exposed separately as a computed `current_servers` (NTP) or `current_next_hop` (static route) value when the legacy schema uses action wrappers. Omit write-action blocks when importing an unchanged configuration.

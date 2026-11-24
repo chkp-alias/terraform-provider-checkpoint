@@ -10,7 +10,7 @@ import (
 
 )
 func resourceGaiaStaticRoute() *schema.Resource {   
-    return &schema.Resource{
+    return gaiaReadResource("static-route", &schema.Resource{
         Create: createGaiaStaticRoute,
         Read:   readGaiaStaticRoute,
         Update: updateGaiaStaticRoute,
@@ -94,7 +94,7 @@ func resourceGaiaStaticRoute() *schema.Resource {
                 Description: `Relevant for commands on Scalable and ElasticXL platforms only.<br>When member-id is provided in the login request,<br>show commands during the session will be executed on the specified member,<br>unless a different member-id is provided in a successive requests<br>Set operations will be performed on all members`,
             },
         },
-    }
+    })
 }
 
 func createGaiaStaticRoute(d *schema.ResourceData, m interface{}) error {
@@ -265,55 +265,7 @@ func readGaiaStaticRoute(d *schema.ResourceData, m interface{}) error {
 
     log.Println("Read StaticRoute - Show JSON = ", safeCopyMap(staticRoute))
 
-    if v, exists := staticRoute["address"]; exists {
-        d.Set("address", fmt.Sprintf("%v", v))
-    }
-    if v, exists := staticRoute["mask-length"]; exists {
-        if f, ok := v.(float64); ok {
-            d.Set("mask_length", int(f))
-        } else if s, ok := v.(string); ok {
-            var _n int
-            if _, _err := fmt.Sscanf(s, "%d", &_n); _err == nil {
-                d.Set("mask_length", _n)
-            }
-        }
-    }
-    if v, exists := staticRoute["type"]; exists {
-        d.Set("type", fmt.Sprintf("%v", v))
-    }
-    if v, exists := staticRoute["next-hop"]; exists {
-        d.Set("next_hop", v.([]interface{}))
-    }
-    if v, exists := staticRoute["ping"]; exists {
-        if b, ok := v.(bool); ok {
-            d.Set("ping", b)
-        } else if s, ok := v.(string); ok {
-            d.Set("ping", s == "true")
-        }
-    }
-    if v, exists := staticRoute["rank"]; exists {
-        if f, ok := v.(float64); ok {
-            d.Set("rank", int(f))
-        }
-    }
-    if v, exists := staticRoute["scope-local"]; exists {
-        if b, ok := v.(bool); ok {
-            d.Set("scope_local", b)
-        } else if s, ok := v.(string); ok {
-            d.Set("scope_local", s == "true")
-        }
-    }
-    if v, exists := staticRoute["comment"]; exists {
-        d.Set("comment", fmt.Sprintf("%v", v))
-    }
-    if v, exists := staticRoute["member-id"]; exists {
-        d.Set("member_id", fmt.Sprintf("%v", v))
-    }
-    if v, exists := staticRoute["virtual-system-id"]; exists {
-        d.Set("virtual_system_id", fmt.Sprintf("%v", v))
-    }
-    d.SetId(d.Id())
-    return nil
+        return gaiaReadState(d, resourceGaiaStaticRoute().Schema, staticRoute)
 }
 
 func updateGaiaStaticRoute(d *schema.ResourceData, m interface{}) error {

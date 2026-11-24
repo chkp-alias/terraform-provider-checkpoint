@@ -10,7 +10,7 @@ import (
 
 )
 func resourceGaiaSshServerSettings() *schema.Resource {   
-    return &schema.Resource{
+    return gaiaReadResource("ssh-server-settings", &schema.Resource{
         Create: createGaiaSshServerSettings,
         Read:   readGaiaSshServerSettings,
         Update: updateGaiaSshServerSettings,
@@ -155,7 +155,7 @@ func resourceGaiaSshServerSettings() *schema.Resource {
                 Description: `Relevant for commands on Scalable and ElasticXL platforms only.<br>When member-id is provided in the login request,<br>show commands during the session will be executed on the specified member,<br>unless a different member-id is provided in a successive requests<br>Set operations will be performed on all members`,
             },
         },
-    }
+    })
 }
 
 func createGaiaSshServerSettings(d *schema.ResourceData, m interface{}) error {
@@ -338,52 +338,7 @@ func readGaiaSshServerSettings(d *schema.ResourceData, m interface{}) error {
 
     log.Println("Read SshServerSettings - Show JSON = ", safeCopyMap(sshServerSettings))
 
-    if v, exists := sshServerSettings["password-authentication"]; exists {
-        if b, ok := v.(bool); ok {
-            d.Set("password_authentication", b)
-        } else if s, ok := v.(string); ok {
-            d.Set("password_authentication", s == "true")
-        }
-    }
-    if v, exists := sshServerSettings["permit-root-login"]; exists {
-        if b, ok := v.(bool); ok {
-            d.Set("permit_root_login", b)
-        } else if s, ok := v.(string); ok {
-            d.Set("permit_root_login", s == "true")
-        }
-    }
-    if v, exists := sshServerSettings["use-dns"]; exists {
-        if b, ok := v.(bool); ok {
-            d.Set("use_dns", b)
-        } else if s, ok := v.(string); ok {
-            d.Set("use_dns", s == "true")
-        }
-    }
-    if v, exists := sshServerSettings["client-alive-interval"]; exists {
-        if f, ok := v.(float64); ok {
-            d.Set("client_alive_interval", int(f))
-        } else if s, ok := v.(string); ok {
-            var _n int
-            if _, _err := fmt.Sscanf(s, "%d", &_n); _err == nil {
-                d.Set("client_alive_interval", _n)
-            }
-        }
-    }
-    if v, exists := sshServerSettings["login-grace-time"]; exists {
-        if f, ok := v.(float64); ok {
-            d.Set("login_grace_time", int(f))
-        } else if s, ok := v.(string); ok {
-            var _n int
-            if _, _err := fmt.Sscanf(s, "%d", &_n); _err == nil {
-                d.Set("login_grace_time", _n)
-            }
-        }
-    }
-    if v, exists := sshServerSettings["member-id"]; exists {
-        d.Set("member_id", fmt.Sprintf("%v", v))
-    }
-    d.SetId(d.Id())
-    return nil
+        return gaiaReadState(d, resourceGaiaSshServerSettings().Schema, sshServerSettings)
 }
 
 func updateGaiaSshServerSettings(d *schema.ResourceData, m interface{}) error {

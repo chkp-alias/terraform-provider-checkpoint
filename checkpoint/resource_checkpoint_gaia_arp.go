@@ -10,7 +10,7 @@ import (
 
 )
 func resourceGaiaArp() *schema.Resource {   
-    return &schema.Resource{
+    return gaiaReadResource("arp", &schema.Resource{
         Create: createGaiaArp,
         Read:   readGaiaArp,
         Update: updateGaiaArp,
@@ -108,7 +108,7 @@ func resourceGaiaArp() *schema.Resource {
                 Description: `Relevant for commands on Scalable and ElasticXL platforms only.<br>When member-id is provided in the login request,<br>show commands during the session will be executed on the specified member,<br>unless a different member-id is provided in a successive requests<br>Set operations will be performed on all members`,
             },
         },
-    }
+    })
 }
 
 func createGaiaArp(d *schema.ResourceData, m interface{}) error {
@@ -281,77 +281,7 @@ func readGaiaArp(d *schema.ResourceData, m interface{}) error {
 
     log.Println("Read Arp - Show JSON = ", safeCopyMap(arp))
 
-    if v, exists := arp["settings"]; exists {
-        if sm, ok := v.(map[string]interface{}); ok {
-            if existing := d.Get("settings"); len(existing.([]interface{})) > 0 {
-                settings := map[string]interface{}{}
-                if val, ok := sm["restriction-level"]; ok {
-                    if f, ok := val.(float64); ok { settings["restriction_level"] = int(f) }
-                }
-                if val, ok := sm["cache-size"]; ok {
-                    if f, ok := val.(float64); ok { settings["cache_size"] = int(f) }
-                }
-                if val, ok := sm["validity-timeout"]; ok {
-                    if f, ok := val.(float64); ok { settings["validity_timeout"] = int(f) }
-                }
-                if val, ok := sm["auto-cache-size"]; ok {
-                    if b, ok := val.(bool); ok { settings["auto_cache_size"] = b }
-                }
-                d.Set("settings", []interface{}{settings})
-            }
-        }
-    }
-    if v, exists := arp["proxy"]; exists {
-        if items, ok := v.([]interface{}); ok {
-            out := make([]interface{}, 0, len(items))
-            for _, ri := range items {
-                if im, ok := ri.(map[string]interface{}); ok {
-                    item := map[string]interface{}{}
-                    if val, ok := im["ipv4-address"]; ok {
-                        item["ipv4_address"] = fmt.Sprintf("%v", val)
-                    }
-                    if val, ok := im["interface"]; ok && fmt.Sprintf("%v", val) != "" {
-                        item["interface"] = fmt.Sprintf("%v", val)
-                    }
-                    if val, ok := im["mac-address"]; ok && fmt.Sprintf("%v", val) != "" {
-                        item["mac_address"] = strings.ToLower(fmt.Sprintf("%v", val))
-                    }
-                    if val, ok := im["real-ipv4-address"]; ok && fmt.Sprintf("%v", val) != "" {
-                        item["real_ipv4_address"] = fmt.Sprintf("%v", val)
-                    }
-                    if len(item) > 0 {
-                        out = append(out, item)
-                    }
-                }
-            }
-            d.Set("proxy", out)
-        }
-    }
-    if v, exists := arp["static"]; exists {
-        if items, ok := v.([]interface{}); ok {
-            out := make([]interface{}, 0, len(items))
-            for _, ri := range items {
-                if im, ok := ri.(map[string]interface{}); ok {
-                    item := map[string]interface{}{}
-                    if val, ok := im["ipv4-address"]; ok {
-                        item["ipv4_address"] = fmt.Sprintf("%v", val)
-                    }
-                    if val, ok := im["mac-address"]; ok {
-                        item["mac_address"] = strings.ToLower(fmt.Sprintf("%v", val))
-                    }
-                    if len(item) > 0 {
-                        out = append(out, item)
-                    }
-                }
-            }
-            d.Set("static", out)
-        }
-    }
-    if v, exists := arp["dynamic"]; exists {
-        d.Set("dynamic", v.([]interface{}))
-    }
-    d.SetId(d.Id())
-    return nil
+        return gaiaReadState(d, resourceGaiaArp().Schema, arp)
 }
 
 func updateGaiaArp(d *schema.ResourceData, m interface{}) error {
